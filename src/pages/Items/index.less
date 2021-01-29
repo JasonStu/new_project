@@ -1,0 +1,26 @@
+.uploadWrap {
+  position: relative;
+  display: flex;
+  min-height: 190px;
+  :global {
+    & .ant-upload-list.ant-upload-list-picture-card {
+      position: relative;
+      padding-top: 60px;
+    }
+
+    & .ant-upload.ant-upload-select-picture-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      z-index: 0;
+    }
+    & .ant-upload-list-picture-card-container {
+      position: relative;
+      z-index: 1;
+      padding: 10px;
+    }
+  }
+}

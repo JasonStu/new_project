@@ -16,7 +16,12 @@ const threeLayout = {
 };
 
 const validateMessages = {
-  required: '${label} is required',
+  required: '${name} is required',
+};
+
+const oneLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
 };
 
 const attrs = {
@@ -52,40 +57,118 @@ const EditModal = (props) => {
       }}
       {...layout}
     >
-      <ProFormText name="WellId" label="Well ID" {...attrs} {...tailLayout} />
-      <ProFormText name="Well#" label="Well #" {...attrs} {...tailLayout} />
-      <ProFormText name="Quantity" label="Quantity" {...attrs} {...tailLayout} />
-      <ProFormSelect
-        name="shape"
-        label="Shape"
-        valueEnum={{
-          1: 'Rectangle',
-          2: 'circular',
-        }}
-        {...attrs}
+      <ProFormText name="LocationId" label="Location ID" {...attrs} {...tailLayout} />
+      <ProFormText name="CompanyName" label="Company Name" {...attrs} {...tailLayout} />
+      <ProFormText name="Contact" label="Contact #1" {...attrs} {...tailLayout} />
+      <Row>
+        <Col offset={7}>
+          <ProFormText
+            name="Phone"
+            label={null}
+            {...attrs}
+            placeholder="Phone*"
+            wrapperCol={{ span: 24 }}
+            validateMessages="Phone is required"
+          />
+        </Col>
+        <Col offset={1}>
+          <ProFormText
+            name="Email"
+            label={null}
+            {...attrs}
+            placeholder="Email*"
+            wrapperCol={{ span: 24 }}
+            validateMessages="Email is required"
+          />
+        </Col>
+        <Col offset={7}>
+          <ProFormText name="Fax" label={null} placeholder="Fax" wrapperCol={{ span: 24 }} />
+        </Col>
+      </Row>
+      <ProFormText name="Contact2" label="Contact #2" placeholder="" {...tailLayout} />
+      <Row>
+        <Col offset={7}>
+          <ProFormText
+            name="Phone2"
+            label={null}
+            {...attrs}
+            placeholder="Phone"
+            wrapperCol={{ span: 24 }}
+          />
+        </Col>
+        <Col offset={1}>
+          <ProFormText name="Email2" label={null} placeholder="Email" wrapperCol={{ span: 24 }} />
+        </Col>
+      </Row>
+      <Form.Item label="Address" {...tailLayout}>
+        <ProFormText name="Country" label="Country" {...attrs} {...oneLayout} />
+        <Form.Item
+          name="Province"
+          label="Province/State"
+          {...attrs}
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name="City"
+          label="City"
+          {...attrs}
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+
+        <Form.Item
+          name="District"
+          label="District"
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name="Postalcode"
+          label="Postal code"
+          {...attrs}
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+
+        <Form.Item
+          name="RecieverName"
+          label="Reciever Name"
+          {...attrs}
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name="RecieverPhone "
+          label="Reciever Phone #"
+          {...attrs}
+          {...oneLayout}
+          style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+      </Form.Item>
+
+      <ProFormText name="CourierInfo" label="Courier Info" {...attrs} {...tailLayout} />
+      <ProFormText name="CourierAccount" label="Courier Account #" {...attrs} {...tailLayout} />
+      <ProFormTextArea
+        fieldProps={{ maxLength: 100, showCount: true }}
+        name="Notes"
+        label="Notes"
         {...tailLayout}
+        placeholder=""
       />
-      <Row>
-        <Col offset={3}>
-          <ProFormText name="Height" label="Height" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
-        </Col>
-        <Col>
-          <ProFormText name="Diameter" label="Diameter" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
-        </Col>
-      </Row>
-      <Row>
-        <Col offset={3}>
-          <ProFormText name="Length" label="Length" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
-        </Col>
-        <Col>
-          <ProFormText name="Width" label="Width" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
-        </Col>
-      </Row>
-      <Row>
-        <Col offset={3}>
-          <ProFormText name="Corner" label="Corner radius" {...attrs} placeholder="in" labelCol={{span: 12}}/>
-        </Col>
-      </Row>
+
       <Row justify="center" style={{ marginTop: 30 }}>
         <Button type="primary" htmlType="submit">
           SUBMIT

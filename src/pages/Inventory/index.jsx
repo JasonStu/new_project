@@ -17,6 +17,16 @@ const InventoryList = () => {
   const columns = [
     ...default_columns,
     {
+      title: 'Price',
+      dataIndex: 'price',
+      width: 100,
+    },
+    {
+      title: 'Quantity in stock',
+      dataIndex: 'stock',
+      width: 100,
+    },
+    {
       title: 'Operation',
       dataIndex: 'operation',
       fixed: 'right',

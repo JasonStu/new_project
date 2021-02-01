@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomPtoTable from '@/components/CustomProTable';
-import { default_columns, default_dataSource } from '../Inventory/const';
+import { default_columns, default_dataSource } from './const';
 
 const PansList = () => {
 
@@ -21,7 +21,8 @@ const PansList = () => {
         dataSource={[...Array(13).keys()].map((item) => default_dataSource(item))}
         columns={columns}
         selfOptions={{
-          title: 'Pans list'
+          title: 'Pans list',
+          searchLabel: 'Pan ID',
         }}
       />
     </>

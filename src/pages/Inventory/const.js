@@ -40,6 +40,10 @@ export const default_dataSource = (key) => ({
     '24/410 PET boston round bottle with 100mL capacity. 24/410 PET boston round bottle with 100mL capaci',
   vendorName: '24/410 PET boston round bottle with 100mL capacity',
   vendorCode: 'DF12345678',
+  price: '123',
+  stock: '123',
+  Dimension: 'info',
+  category: 'Jars and Pots'
 });
 
 export const default_columns = [

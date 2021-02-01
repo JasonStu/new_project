@@ -8,7 +8,7 @@ import Open1 from '@/assets/open1.png';
 const CustomPtoTable = (props) => {
   const { selfOptions = {}, ...otherProps } = props;
 
-  const { onAdd, onExport, title } = selfOptions;
+  const { onAdd, onExport, title, searchLabel = "Item ID" } = selfOptions;
 
   const toolBarRender = () => {
     return [
@@ -36,7 +36,7 @@ const CustomPtoTable = (props) => {
         {title}
       </div>
       <Row align="middle">
-        <span>Item ID</span>
+        <span>{searchLabel}</span>
         <Input.Search placeholder="" onSearch={onSearch} style={{ width: 200, marginLeft: 10 }} />
       </Row>
     </Row>

@@ -50,12 +50,13 @@ const EditModal = (props) => {
       setFileList2(imgCloseList);
     }
     if (Factory) {
-      setFileList2(Factory);
+      setFileList3(Factory);
     }
   }, [initialValues]);
 
   const onFinish = async (value) => {
     onSubmit({
+      ...initialValues,
       ...value,
       imgOpenList: fileList,
       imgCloseList: fileList2,
@@ -149,8 +150,7 @@ const EditModal = (props) => {
         rules={[
           {
             required: true,
-            validator: (rule, value, cb) =>
-              fileList2.length !== 0 ? cb() : cb('Closed Item is required'),
+            validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList2),
           },
         ]}
         wrapperCol={{ span: 12 }}
@@ -196,8 +196,8 @@ const EditModal = (props) => {
         name="category"
         label="Category"
         valueEnum={{
-          1: 'Jars and Pots',
-          2: 'Jars and Pots2',
+          'Jars and Pots': 'Jars and Pots',
+          'Jars and Pots2': 'Jars and Pots2',
         }}
         initialValue="Jars and Pots"
         {...attrs}

@@ -17,6 +17,16 @@ const ItemsList = () => {
   const columns = [
     ...default_columns,
     {
+      title: 'Dimension',
+      dataIndex: 'Dimension',
+      width: 100,
+    },
+    {
+      title: 'Category/Line',
+      dataIndex: 'category',
+      width: 100,
+    },
+    {
       title: 'Operation',
       dataIndex: 'operation',
       fixed: 'right',
@@ -36,7 +46,6 @@ const ItemsList = () => {
   ];
 
   const onSubmit = (value) => {
-    console.log(value)
     if (type === 'Edit') {
       const data = dataSource.map((item) => {
         if (item.key === value.key) {

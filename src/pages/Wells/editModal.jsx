@@ -33,7 +33,7 @@ const EditModal = (props) => {
   }, [initialValues]);
 
   const onFinish = async (value) => {
-    onSubmit(value);
+    onSubmit({ ...initialValues, ...value });
   };
 
   return (
@@ -56,11 +56,11 @@ const EditModal = (props) => {
       <ProFormText name="Well#" label="Well #" {...attrs} {...tailLayout} />
       <ProFormText name="Quantity" label="Quantity" {...attrs} {...tailLayout} />
       <ProFormSelect
-        name="shape"
+        name="Shape"
         label="Shape"
         valueEnum={{
-          1: 'Rectangle',
-          2: 'circular',
+          'Rectangle': 'Rectangle',
+          'circular': 'circular',
         }}
         {...attrs}
         {...tailLayout}

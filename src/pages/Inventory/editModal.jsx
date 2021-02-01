@@ -36,7 +36,7 @@ const EditModal = (props) => {
   }, [initialValues]);
 
   const onFinish = async (value) => {
-    onSubmit(value);
+    onSubmit({...initialValues, ...value});
   };
 
   const renderUploadItem = (node, file) => {

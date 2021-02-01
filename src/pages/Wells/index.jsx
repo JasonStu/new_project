@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
-import { default_columns, default_dataSource } from '../Inventory/const';
+import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
 
 const WellsList = () => {
@@ -57,6 +57,7 @@ const WellsList = () => {
         columns={columns}
         selfOptions={{
           title: 'Wells list',
+          searchLabel: 'Well ID',
           onAdd: () => {
             setType('Add');
             setVisible(true);

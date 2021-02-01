@@ -38,7 +38,7 @@ const EditModal = (props) => {
   }, [initialValues]);
 
   const onFinish = async (value) => {
-    onSubmit(value);
+    onSubmit({...initialValues, ...value});
   };
 
   return (
@@ -149,7 +149,7 @@ const EditModal = (props) => {
           <Input placeholder="" />
         </Form.Item>
         <Form.Item
-          name="RecieverPhone "
+          name="RecieverPhone"
           label="Reciever Phone #"
           {...attrs}
           {...oneLayout}

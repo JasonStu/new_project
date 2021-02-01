@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
-import { default_columns, default_dataSource } from '../Inventory/const';
+import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
 
 const JPLocationList = () => {
@@ -57,6 +57,7 @@ const JPLocationList = () => {
         columns={columns}
         selfOptions={{
           title: 'JP Location list',
+          searchLabel: 'Location ID',
           onAdd: () => {
             setType('Add');
             setVisible(true);

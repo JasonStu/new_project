@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
-import { default_columns, default_dataSource } from '../Inventory/const';
+import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
 
 const ItemsList = () => {
@@ -16,16 +16,6 @@ const ItemsList = () => {
 
   const columns = [
     ...default_columns,
-    {
-      title: 'Dimension',
-      dataIndex: 'Dimension',
-      width: 100,
-    },
-    {
-      title: 'Category/Line',
-      dataIndex: 'category',
-      width: 100,
-    },
     {
       title: 'Operation',
       dataIndex: 'operation',

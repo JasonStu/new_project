@@ -41,13 +41,13 @@ const EditModal = (props) => {
   const [fileList3, setFileList3] = useState([]);
 
   useEffect(() => {
-    const { imgOpenList = [], imgCloseList = [], Factory = [] } = initialValues;
+    const { openItem = [], closedItem = [], Factory = [] } = initialValues;
     form.resetFields();
-    if (imgOpenList) {
-      setFileList(imgOpenList);
+    if (openItem) {
+      setFileList(openItem);
     }
-    if (imgCloseList) {
-      setFileList2(imgCloseList);
+    if (closedItem) {
+      setFileList2(closedItem);
     }
     if (Factory) {
       setFileList3(Factory);
@@ -58,8 +58,8 @@ const EditModal = (props) => {
     onSubmit({
       ...initialValues,
       ...value,
-      imgOpenList: fileList,
-      imgCloseList: fileList2,
+      openItem: fileList,
+      closedItem: fileList2,
       Factory: fileList3,
     });
   };
@@ -174,18 +174,18 @@ const EditModal = (props) => {
       </Form.Item>
 
       <ProFormSelect
-        name="shape"
+        name="Shape"
         label="Shape"
         valueEnum={{
-          1: 'Rectangle',
-          2: 'circular',
+          'Rectangle': 'Rectangle',
+          'circular': 'circular',
         }}
         {...attrs}
         {...tailLayout}
       />
       <ProFormTextArea
         fieldProps={{ maxLength: 100, showCount: true }}
-        name="desc"
+        name="Description"
         label="Description"
         {...attrs}
         {...tailLayout}
@@ -340,8 +340,8 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Pan Well"
-            label="PanWell"
+            name="PanWell"
+            label="Pan Well"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
             {...threeLayout}
@@ -349,8 +349,8 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Pan Depth"
-            label="PanDepth"
+            name="PanDepth"
+            label="Pan Depth"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
             {...threeLayout}
@@ -358,8 +358,8 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Cup Size"
-            label="CupSize"
+            name="CupSize"
+            label="Cup Size"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
             {...threeLayout}

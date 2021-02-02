@@ -1,9 +1,10 @@
 import React from 'react';
 import CustomPtoTable from '@/components/CustomProTable';
 import { default_columns, default_dataSource } from './const';
+import { ArrowDownOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const PansList = () => {
-
   const columns = [
     ...default_columns,
     {
@@ -11,7 +12,7 @@ const PansList = () => {
       dataIndex: 'operation',
       fixed: 'right',
       width: 100,
-      render: () => <a>Edit</a>
+      render: () => <a>Edit</a>,
     },
   ];
 
@@ -24,6 +25,11 @@ const PansList = () => {
           title: 'Pans list',
           searchLabel: 'Pan ID',
         }}
+        toolBarRender={() => [
+          <Button key="export">
+            <ArrowDownOutlined /> Export
+          </Button>,
+        ]}
       />
     </>
   );

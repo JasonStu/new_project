@@ -60,7 +60,12 @@ export const default_columns = [
     width: 100,
     render: (text, record) => {
       const { Country, Province, City, District, Postalcode, RecieverName, RecieverPhone } = record;
-      return `${record.Country},${record.Province},${record.City},${record.District},${record.Postalcode},${record.RecieverName},${record.RecieverPhone}`;
+      return (
+        `## ${District}
+        ${City},${Province},${Postalcode}
+        ${Country}
+        `
+      );
     },
   },
   {

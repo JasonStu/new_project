@@ -25,7 +25,7 @@ export const default_dataSource = (key) => ({
   date: '1975-03-29',
   itemID: 'JI-12345',
   Category: 'Mirror Holder',
-  SubCategory: 'Mirror Holder',
+  Line: 'Hinged Jars & Pots',
   Shape: 'Other',
   Description: 'Description',
   Length: '10',
@@ -117,8 +117,8 @@ export const default_columns = [
     width: 150,
   },
   {
-    title: 'Sub-Category',
-    dataIndex: 'SubCategory',
+    title: 'Line',
+    dataIndex: 'Line',
     width: 200,
   },
   {

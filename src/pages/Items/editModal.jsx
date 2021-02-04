@@ -204,11 +204,11 @@ const EditModal = (props) => {
         {...tailLayout}
       />
       <ProFormSelect
-        name="line"
+        name="Line"
         label="Line"
         valueEnum={{
-          1: 'Hinged Jars & Pots',
-          2: 'Hinged Jars & Pots2',
+          'Hinged Jars & Pots': 'Hinged Jars & Pots',
+          'Hinged Jars & Pots2': 'Hinged Jars & Pots2',
         }}
         initialValue="Hinged Jars & Pots"
         {...attrs}

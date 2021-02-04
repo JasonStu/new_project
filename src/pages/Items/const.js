@@ -119,7 +119,7 @@ export const default_columns = [
   {
     title: 'Sub Category',
     dataIndex: 'SubCategory',
-    width: 100,
+    width: 200,
   },
   {
     title: 'Shape',

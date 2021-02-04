@@ -117,7 +117,7 @@ export const default_columns = [
     width: 150,
   },
   {
-    title: 'Sub Category',
+    title: 'Sub-Category',
     dataIndex: 'SubCategory',
     width: 200,
   },

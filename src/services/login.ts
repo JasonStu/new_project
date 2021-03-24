@@ -3,13 +3,12 @@ import { request } from 'umi';
 export type LoginParamsType = {
   username: string;
   password: string;
-  mobile: string;
-  captcha: string;
+  code: Number;
   type: string;
 };
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request<API.LoginStateType>('/api/login/account', {
+  return request<API.LoginStateType>('/api/user/login', {
     method: 'POST',
     data: params,
   });

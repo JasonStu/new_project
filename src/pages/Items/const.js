@@ -1,22 +1,25 @@
 import { Row } from 'antd';
 import Open1 from '@/assets/open1.png';
 import { isArray } from 'lodash';
+import moment from 'moment';
+const USA_FORMAT = 'MM-DD-YYYY'
 
 const renderImgList = (text, record, index) => {
+  // console.log('text',text);
   if (isArray(text) && text.length) {
     return (
       <Row key={index}>
         {text.map((item) => (
           <img
             style={{ width: 46, height: 46, marginLeft: 10 }}
-            src={item.url || item.thumbUrl || ''}
-            key={item.uid}
+            src={item.url || ''}
+            key={item.url}
           />
         ))}
       </Row>
     );
   }
-  return null;
+  return <div />;
 };
 
 export const default_dataSource = (key) => ({
@@ -97,129 +100,141 @@ export const default_columns = [
   },
   {
     title: 'Date',
-    dataIndex: 'date',
+    dataIndex: 'create_time',
+    width: 100,
+    render: (i) => moment(i).format(USA_FORMAT)
+
+  },
+  {
+    title: 'Item ID',
+    dataIndex: 'item_id',
     width: 100,
   },
   {
-    title: 'Item Code',
-    dataIndex: 'itemID',
-    width: 100,
+    title: 'Product Photo Open',
+    dataIndex: 'items_open_image',
+    width: 200,
+    render: renderImgList
   },
   {
-    title: 'Product Photo Upload',
-    dataIndex: 'openItem',
+    title: 'Product Photo Closed',
+    dataIndex: 'items_closed_image',
     width: 200,
     render: renderImgList
   },
   {
     title: 'Category',
-    dataIndex: 'Category',
+    dataIndex: 'category',
     width: 150,
   },
   {
     title: 'Line',
-    dataIndex: 'Line',
+    dataIndex: 'line',
     width: 200,
   },
   {
-    title: 'Shape',
-    dataIndex: 'Shape',
+    title: 'ECO',
+    dataIndex: 'eco_friendly',
     width: 100,
+    render: (i) => <div>{i ? 'YES' : 'NO'}</div>
+
   },
   {
     title: 'Description',
-    dataIndex: 'Description',
+    dataIndex: 'description',
+    width: 100,
+  },
+
+  {
+    title: 'Shape',
+    dataIndex: 'shape',
     width: 100,
   },
   {
     title: 'Length',
-    dataIndex: 'Length',
+    dataIndex: 'length',
     width: 100,
   },
   {
     title: 'Width',
-    dataIndex: 'Width',
+    dataIndex: 'width',
     width: 100,
   },
   {
     title: 'Height',
-    dataIndex: 'Height',
+    dataIndex: 'height',
     width: 100,
   },
   {
     title: 'Diameter',
-    dataIndex: 'Diameter',
+    dataIndex: 'diameter',
     width: 100,
   },
   {
     title: 'Pan Well',
-    dataIndex: 'PanWell',
+    dataIndex: 'pan_well',
     width: 100,
   },
   {
     title: 'Pan Depth',
-    dataIndex: 'PanDepth',
+    dataIndex: 'pan_depth',
     width: 100,
   },
   {
     title: 'Cup Size',
-    dataIndex: 'CupSize',
+    dataIndex: 'cup_size',
     width: 100,
   },
   {
     title: 'Caliber',
-    dataIndex: 'Caliber',
+    dataIndex: 'caliber',
     width: 100,
   },
   {
     title: '# of wells',
-    dataIndex: 'ofwells',
+    dataIndex: 'of_wells',
     width: 100,
   },
   {
     title: 'Dosage',
-    dataIndex: 'Dosage',
+    dataIndex: 'dosage',
     width: 100,
   },
   {
     title: 'Capacity',
-    dataIndex: 'Capacity',
+    dataIndex: 'capacity',
     width: 100,
   },
   {
     title: 'Weight',
-    dataIndex: 'Weight',
+    dataIndex: 'weight',
     width: 100,
   },
   {
     title: 'Thread',
-    dataIndex: 'Thread',
+    dataIndex: 'thread',
     width: 100,
   },
-  {
-    title: 'Additional Fields',
-    dataIndex: 'Additional',
-    width: 100,
-  },
+
   {
     title: 'Vendor Name',
-    dataIndex: 'vendorName',
+    dataIndex: 'vendor_name',
     width: 100,
   },
   {
     title: 'Vendor Code',
-    dataIndex: 'vendorCode',
+    dataIndex: 'vendor_code',
     width: 100,
   },
   {
     title: 'Factory Drawing',
-    dataIndex: 'Factory',
+    dataIndex: 'items_factory_image',
     width: 200,
     render: renderImgList
   },
   {
     title: 'Jerhel Drawing',
-    dataIndex: 'closedItem',
+    dataIndex: 'items_jerhel_image',
     width: 200,
     render: renderImgList
   },

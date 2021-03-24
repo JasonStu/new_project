@@ -1,13 +1,33 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Row, Col, Card, Button } from 'antd';
 
 import CustomPtoTable from '@/components/CustomProTable';
-import { default_columns, default_dataSource } from '../Inventory/const';
+import { getDashboardMainInfo, getDashboardList } from "@/services/dashboard";
+import { default_columns, } from '../Items/const';
 
 const DashboardList = () => {
   const [dataSource, setDataSource] = useState(
-    [...Array(13).keys()].map((item) => default_dataSource(item)),
+    []
   );
+  const [rowCount, setRowCount] = useState({
+    count: 0,
+    page: 1
+  });
+
+  const [userHeaderState, setUserHeaderState] = useState({});
+
+  const fetchData = async () => {
+    const result = await getDashboardMainInfo()
+    const { data } = await getDashboardList()
+    setUserHeaderState(result.data)
+    setDataSource(data.rows)
+    setRowCount({ count: data.count, page: data.page })
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   const actionRef = useRef();
 
   const columns = [
@@ -19,45 +39,47 @@ const DashboardList = () => {
       width: 100,
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <a onClick={() => {}}>Edit</a>
+          <a onClick={() => {
+            console.log(text, record);
+          }}>Edit</a>
         </div>
       ),
     },
     {
       title: 'Action',
-      dataIndex: 'operation',
+      // dataIndex: 'is_updated',
       fixed: 'right',
       width: 100,
-      render: (text, record, index) => {
-        if (index === 0) {
-          return (
-            <Button
-              type="primary"
-              shape="round"
-              size="small"
-              style={{ background: '#FFAE42', color: '#9F3C0D', borderColor: '#FFAE42' }}
-              block
-            >
-              Publish Update
-            </Button>
-          );
-        }
-        if (index === 1) {
-          return (
-            <Button
-              type="primary"
-              shape="round"
-              size="small"
-              style={{ background: '#FE3155', color: '#9B001B', borderColor: '#FE3155' }}
-              block
-            >
-              Publish New
-            </Button>
-          );
-        }
-        return null;
+
+      render: (text, record) => {
+
+        return <span  >
+          {record.is_updated === 1 && record.is_published === 1 && <Button
+            type="primary"
+            shape="round"
+            size="small"
+            style={{ background: '#FFAE42', color: '#9F3C0D', borderColor: '#FFAE42' }}
+            block
+          >
+            Publish Update
+            </Button>}
+          {record.is_published === 0 && <Button
+
+            type="primary"
+            shape="round"
+            size="small"
+            style={{ background: '#FE3155', color: '#9B001B', borderColor: '#FE3155' }}
+            block
+          >
+            Publish New
+          </Button>}
+        </span>
+
+
+
       },
     },
+
   ];
 
   const renderCardCol = (title, value) => {
@@ -103,12 +125,17 @@ const DashboardList = () => {
     );
   };
 
+  const { itemsTotal,
+    inventoryTotal,
+    updatedTotal,
+    publishedTotal } = userHeaderState
+
   return (
     <>
       <div style={{ background: '#FFFFFF' }}>
         <Row gutter={8} style={{ padding: 20 }}>
-          {renderCardCol('Total Items', '2000')}
-          {renderCardCol('Total Items In Inventory', '1500')}
+          {renderCardCol('Total Items', itemsTotal)}
+          {renderCardCol('Total Items In Inventory', inventoryTotal)}
           {renderCardCol(
             'Outstanding Tasks',
             <div
@@ -117,8 +144,8 @@ const DashboardList = () => {
                 alignItems: 'center',
               }}
             >
-              {colorNum(4, 'New Item Approvals', '#FE3155')}
-              {colorNum(6, 'Update Item Approvals', '#FB9001')}
+              {colorNum(publishedTotal, 'New Item Approvals', '#FE3155')}
+              {colorNum(updatedTotal, 'Update Item Approvals', '#FB9001')}
             </div>,
           )}
         </Row>
@@ -126,6 +153,20 @@ const DashboardList = () => {
           dataSource={dataSource}
           columns={columns}
           toolBarRender={null}
+          selfOptions={{
+            pagination: {
+              total: rowCount.count,
+              current: rowCount.page,
+              onChange: (page) => {
+                fetchData({
+                  page,
+                  limit: 10,
+                  well_id: wellID
+                })
+                console.log('next', page);
+              }
+            }
+          }}
           options={false}
           headerTitle={null}
           actionRef={actionRef}

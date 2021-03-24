@@ -1,18 +1,42 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
-
+import { getItemList, createItems, updateItems, getItemsDetail, getCategoryList, getLineList, checkItemsExist } from "@/services/item";
+import { message } from 'antd';
 const ItemsList = () => {
   const [visible, setVisible] = useState(false);
-  const [dataSource, setDataSource] = useState(
-    [...Array(13).keys()].map((item) => default_dataSource(item)),
-  );
+  const [dataSource, setDataSource] = useState([]);
   const [initialValues, setInitialValues] = useState({});
+  const [rowCount, setRowCount] = useState({
+    count: 0,
+    page: 1
+  });
+  const [itemID, setItemID] = useState('');
   const [type, setType] = useState('Add');
   const actionRef = useRef();
+
+  const fetchData = async (params) => {
+    try {
+      const { data } = await getItemList(params)
+      setDataSource(data.rows)
+      setRowCount({ count: data.count, page: data.page })
+    } catch (error) {
+      // message.error(error)      
+      console.log('error', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData({
+      page: 1,
+      limit: 10,
+      item_id: itemID
+    })
+  }, [])
+
 
   const columns = [
     ...default_columns,
@@ -70,6 +94,25 @@ const ItemsList = () => {
             setVisible(true);
             setInitialValues({});
           },
+          onSearch: (value) => {
+            setItemID(value)
+            fetchData({
+              page: 1,
+              limit: 10,
+              item_id: value
+            })
+          },
+          pagination: {
+            total: rowCount.count,
+            current: rowCount.page,
+            onChange: (page) => {
+              fetchData({
+                page: page,
+                limit: 10,
+                item_id: wellID
+              })
+            }
+          }
         }}
         actionRef={actionRef}
       />

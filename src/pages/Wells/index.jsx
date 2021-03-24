@@ -1,18 +1,47 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
+import { getWellList, createWells, updateWells, getWellsDetail } from "@/services/well";
+import { message } from 'antd';
 
 const WellsList = () => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState(
-    [...Array(13).keys()].map((item) => default_dataSource(item)),
+    []
   );
+  const [rowCount, setRowCount] = useState({
+    count: 0,
+    page: 1
+  });
+  const [wellID, setWellID] = useState('' );
   const [initialValues, setInitialValues] = useState({});
   const [type, setType] = useState('Add');
   const actionRef = useRef();
+
+  const fetchData = async (params) => {
+    try {
+      const { data } = await getWellList(params)
+      setDataSource(data.rows)
+      setRowCount({ count: data.count, page: data.page })
+
+    } catch (error) {
+      message.error(error)
+      console.log('error', error);
+    }
+
+  }
+
+  useEffect(() => {
+    fetchData({
+      page: 1,
+      limit: 10,
+      well_id: wellID
+    })
+  }, [])
+
 
   const columns = [
     ...default_columns,
@@ -29,25 +58,38 @@ const WellsList = () => {
     },
   ];
 
-  const onSubmit = (value) => {
-    if(type === 'Edit') {
-      const data = dataSource.map(item => {
-        if(item.key === value.key) {
-          return value;
-        }else {
-          return item;
-        }
-      })
-      setDataSource(data);
-    }else {
-      const data = [{
-        ...default_dataSource(uniqueId()),
-        ...value,
-        key: uniqueId('add_'),
-      }].concat(dataSource);
-      setDataSource(data);
+  const onSubmit = async (value) => {
+    if (type === 'Edit') {
+      delete value.create_time
+      delete value.update_time
+      console.log('value===>', value);
+      const data = await updateWells(value)
+      if (data.code) {
+        await fetchData({
+          page: 1,
+          limit: 10,
+          well_id: wellID
+        })
+        setVisible(false);
+      } else {
+        message.error(data.msg)
+      }
+    } else {
+
+      const data = await createWells(value)
+      if (data.code) {
+        await fetchData({
+          page: 1,
+          limit: 10,
+          well_id: wellID
+        })
+        setVisible(false);
+      } else {
+        message.error(data.msg)
+      }
+
     }
-    setVisible(false);
+
   };
 
   return (
@@ -63,6 +105,26 @@ const WellsList = () => {
             setVisible(true);
             setInitialValues({});
           },
+          onSearch: (value) => {
+            setWellID(value)
+            fetchData({
+              page: 1,
+              limit: 10,
+              well_id: value
+            })
+          },
+          pagination: {
+            total: rowCount.count,
+            current: rowCount.page,
+            onChange: (page) => {
+              fetchData({
+                page: page,
+                limit: 10,
+                well_id: wellID
+              })
+              console.log('next', page);
+            }
+          }
         }}
         actionRef={actionRef}
       />

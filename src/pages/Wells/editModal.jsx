@@ -52,38 +52,39 @@ const EditModal = (props) => {
       }}
       {...layout}
     >
-      <ProFormText name="WellId" label="Well ID" {...attrs} {...tailLayout} />
-      <ProFormText name="Well#" label="Well #" {...attrs} {...tailLayout} />
-      <ProFormText name="Quantity" label="Quantity" {...attrs} {...tailLayout} />
+      <ProFormText name="well_id" label="Well ID" {...attrs} {...tailLayout} />
+      <ProFormText name="well" label="Well #" {...attrs} {...tailLayout} />
+      <ProFormText name="quantity" label="Quantity" {...attrs} {...tailLayout} />
       <ProFormSelect
-        name="Shape"
+        name="shape"
         label="Shape"
         valueEnum={{
           'Rectangle': 'Rectangle',
-          'circular': 'circular',
+          'Round': 'round',
+          'Square':'square'
         }}
         {...attrs}
         {...tailLayout}
       />
       <Row>
         <Col offset={3}>
-          <ProFormText name="Height" label="Height" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
+          <ProFormText name="height" label="Height" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
         </Col>
         <Col>
-          <ProFormText name="Diameter" label="Diameter" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
+          <ProFormText name="diameter" label="Diameter" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
         </Col>
       </Row>
       <Row>
         <Col offset={3}>
-          <ProFormText name="Length" label="Length" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
+          <ProFormText name="length" label="Length" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
         </Col>
         <Col>
-          <ProFormText name="Width" label="Width" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
+          <ProFormText name="width" label="Width" {...attrs} placeholder="mm" labelCol={{span: 12}}/>
         </Col>
       </Row>
       <Row>
         <Col offset={3}>
-          <ProFormText name="Corner" label="Corner radius" {...attrs} placeholder="in" labelCol={{span: 12}}/>
+          <ProFormText name="corner_radius" label="Corner radius" {...attrs} placeholder="in" labelCol={{span: 12}}/>
         </Col>
       </Row>
       <Row justify="center" style={{ marginTop: 30 }}>

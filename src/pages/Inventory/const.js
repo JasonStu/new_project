@@ -1,13 +1,54 @@
 import { Row } from 'antd';
 import Open1 from '@/assets/open1.png';
+import moment from 'moment';
 import { isArray } from 'lodash';
+const USA_FORMAT = 'MM-DD-YYYY'
+
+const renderImgList = (text, record, index) => {
+  // console.log('text',text);
+  if (isArray(text) && text.length) {
+    return (
+      <Row key={index}>
+        {text.map((item) => (
+          <img
+            style={{ width: 46, height: 46, marginLeft: 10 }}
+            src={item.url || ''}
+            key={item.url}
+          />
+        ))}
+      </Row>
+    );
+  }
+  return <div />;
+};
 
 export const default_dataSource = (key) => ({
   key,
   id: 84 + key,
   date: '1975-03-29',
   itemID: 'JI-12345',
-  imgOpenList: [
+  Category: 'Mirror Holder',
+  Line: 'Hinged Jars & Pots',
+  Shape: 'Other',
+  Description: 'Description',
+  Length: '10',
+  Width: '10',
+  Height: '30',
+  Diameter: '30',
+  PanWell: '30',
+  PanDepth: '30',
+  CupSize: '30',
+  Caliber: '30',
+  ofwells: '30',
+  Dosage: '30',
+  Capacity: '30',
+  Weight: '30',
+  Thread: '30',
+  Additional: '30',
+  vendorName: 'Vendor Name',
+  vendorCode: 'Vendor Code',
+
+  openItem: [
     {
       uid: 'open1',
       name: 'open1',
@@ -21,7 +62,7 @@ export const default_dataSource = (key) => ({
       url: Open1,
     },
   ],
-  imgCloseList: [
+  closedItem: [
     {
       uid: 'close1',
       name: 'close1',
@@ -35,15 +76,20 @@ export const default_dataSource = (key) => ({
       url: Open1,
     },
   ],
-  shape: 'Rectangle',
-  desc:
-    '24/410 PET boston round bottle with 100mL capacity. 24/410 PET boston round bottle with 100mL capaci',
-  vendorName: '24/410 PET boston round bottle with 100mL capacity',
-  vendorCode: 'DF12345678',
-  price: '123',
-  stock: '123',
-  Dimension: 'info',
-  category: 'Jars and Pots'
+  Factory: [
+    {
+      uid: 'Factory1',
+      name: 'Factory1',
+      status: 'done',
+      url: Open1,
+    },
+    {
+      uid: 'Factory2',
+      name: 'Factory2',
+      status: 'done',
+      url: Open1,
+    },
+  ],
 });
 
 export const default_columns = [
@@ -54,74 +100,74 @@ export const default_columns = [
   },
   {
     title: 'Date',
-    dataIndex: 'date',
+    dataIndex: 'create_time',
     width: 100,
+    render: (i) => moment(i).format(USA_FORMAT)
+
   },
   {
     title: 'Item ID',
-    dataIndex: 'itemID',
+    dataIndex: 'item_id',
     width: 100,
+    
   },
+ 
   {
-    title: 'Product Photo Open',
-    dataIndex: 'imgOpenList',
-    width: 200,
-    render: (text, record, index) => {
-      if (isArray(text) && text.length) {
-        return (
-          <Row key={index}>
-            {text.map((item) => (
-              <img
-                style={{ width: 46, height: 46, marginLeft: 10 }}
-                src={item.url || item.thumbUrl || ''}
-                key={item.uid}
-              />
-            ))}
-          </Row>
-        );
-      }
-      return null;
-    },
-  },
-  {
-    title: 'Product Photo Closed',
-    dataIndex: 'imgCloseList',
-    width: 200,
-    render: (text, record, index) => {
-      if (isArray(text) && text.length) {
-        return (
-          <Row key={index}>
-            {text.map((item) => (
-              <img
-                style={{ width: 46, height: 46, marginLeft: 10 }}
-                src={item.url || item.thumbUrl || ''}
-                key={item.uid}
-              />
-            ))}
-          </Row>
-        );
-      }
-      return null;
-    },
-  },
-  {
-    title: 'Shape',
-    dataIndex: 'shape',
-    width: 100,
+    title: 'Item Name',
+    dataIndex: 'item_name',
+    width: 150,
   },
   {
     title: 'Description',
-    dataIndex: 'desc',
+    dataIndex: 'description',
+    width: 100,
+  },
+
+  {
+    title: 'Price Per Piece',
+    dataIndex: 'price_per_piece',
     width: 200,
   },
   {
-    title: 'Vendor Name',
-    dataIndex: 'vendorName',
+    title: 'Pieces Per Box',
+    dataIndex: 'pieces_per_box',
     width: 200,
   },
   {
-    title: 'Vendor Code',
-    dataIndex: 'vendorCode',
-    width: 150,
+    title: 'Total Price',
+    dataIndex: 'total_price',
+    width: 100,
   },
+  {
+    title: 'Length',
+    dataIndex: 'length',
+    width: 100,
+  },
+  {
+    title: 'Width',
+    dataIndex: 'width',
+    width: 100,
+  },
+  {
+    title: 'Height',
+    dataIndex: 'height',
+    width: 100,
+  },
+  {
+    title: 'Weight',
+    dataIndex: 'weight',
+    width: 100,
+  },
+  {
+    title: 'Number of boxes in stock',
+    dataIndex: 'number_of_boxes_in_stock',
+    width: 100,
+  },
+  {
+    title: 'Discontinued',
+    dataIndex: 'discontinued',
+    width: 100,
+  },
+   
+ 
 ];

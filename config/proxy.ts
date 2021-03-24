@@ -8,21 +8,21 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      target: 'http://cosmetics.duqingyu.top',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
   },
   test: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      target: 'http://cosmetics.duqingyu.top',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
   },
   pre: {
     '/api/': {
-      target: 'your pre url',
+      target: 'http://cosmetics.duqingyu.top',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },

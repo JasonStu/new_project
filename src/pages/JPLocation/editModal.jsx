@@ -57,13 +57,14 @@ const EditModal = (props) => {
       }}
       {...layout}
     >
-      <ProFormText name="LocationId" label="Location ID" {...attrs} {...tailLayout} />
-      <ProFormText name="CompanyName" label="Company Name" {...attrs} {...tailLayout} />
-      <ProFormText name="Contact" label="Contact #1" {...attrs} {...tailLayout} />
+      <ProFormText name="location_id" label="Location ID" {...attrs} {...tailLayout} />
+      <ProFormText name="company_name" label="Company Name" {...attrs} {...tailLayout} />
+      <ProFormText name="contact_1" label="Contact #1" {...attrs} {...tailLayout} />
       <Row>
+       
         <Col offset={7}>
           <ProFormText
-            name="Phone"
+            name="contact_1_phone"
             label={null}
             {...attrs}
             placeholder="Phone*"
@@ -73,7 +74,7 @@ const EditModal = (props) => {
         </Col>
         <Col offset={1}>
           <ProFormText
-            name="Email"
+            name="contact_1_email"
             label={null}
             {...attrs}
             placeholder="Email*"
@@ -82,14 +83,14 @@ const EditModal = (props) => {
           />
         </Col>
         <Col offset={7}>
-          <ProFormText name="Fax" label={null} placeholder="Fax" wrapperCol={{ span: 24 }} />
+          <ProFormText name="contact_1_fax" label={null} placeholder="Fax" wrapperCol={{ span: 24 }} />
         </Col>
       </Row>
-      <ProFormText name="Contact2" label="Contact #2" placeholder="" {...tailLayout} />
+      <ProFormText name="contact_2" label="Contact #2" placeholder="" {...tailLayout} />
       <Row>
         <Col offset={7}>
           <ProFormText
-            name="Phone2"
+            name="contact_2_phone"
             label={null}
             {...attrs}
             placeholder="Phone"
@@ -97,13 +98,13 @@ const EditModal = (props) => {
           />
         </Col>
         <Col offset={1}>
-          <ProFormText name="Email2" label={null} placeholder="Email" wrapperCol={{ span: 24 }} />
+          <ProFormText name="contact_2_email" label={null} placeholder="Email" wrapperCol={{ span: 24 }} />
         </Col>
       </Row>
       <Form.Item label="Address" {...tailLayout}>
-        <ProFormText name="Country" label="Country" {...attrs} {...oneLayout} />
+        <ProFormText name="address_country" label="Country" {...attrs} {...oneLayout} />
         <Form.Item
-          name="Province"
+          name="address_province"
           label="Province/State"
           {...attrs}
           {...oneLayout}
@@ -112,7 +113,7 @@ const EditModal = (props) => {
           <Input placeholder="" />
         </Form.Item>
         <Form.Item
-          name="City"
+          name="address_city"
           label="City"
           {...attrs}
           {...oneLayout}
@@ -122,7 +123,7 @@ const EditModal = (props) => {
         </Form.Item>
 
         <Form.Item
-          name="District"
+          name="address_district"
           label="District"
           {...oneLayout}
           style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
@@ -130,7 +131,7 @@ const EditModal = (props) => {
           <Input placeholder="" />
         </Form.Item>
         <Form.Item
-          name="Postalcode"
+          name="address_postal_code"
           label="Postal code"
           {...attrs}
           {...oneLayout}
@@ -140,7 +141,7 @@ const EditModal = (props) => {
         </Form.Item>
 
         <Form.Item
-          name="RecieverName"
+          name="address_reciever_name"
           label="Reciever Name"
           {...attrs}
           {...oneLayout}
@@ -149,7 +150,7 @@ const EditModal = (props) => {
           <Input placeholder="" />
         </Form.Item>
         <Form.Item
-          name="RecieverPhone"
+          name="address_reciever_phone"
           label="Reciever Phone #"
           {...attrs}
           {...oneLayout}
@@ -159,11 +160,11 @@ const EditModal = (props) => {
         </Form.Item>
       </Form.Item>
 
-      <ProFormText name="CourierInfo" label="Courier Info" {...attrs} {...tailLayout} />
-      <ProFormText name="CourierAccount" label="Courier Account #" {...attrs} {...tailLayout} />
+      <ProFormText name="courier_info" label="Courier Info" {...attrs} {...tailLayout} />
+      <ProFormText name="courier_account" label="Courier Account #" {...attrs} {...tailLayout} />
       <ProFormTextArea
         fieldProps={{ maxLength: 100, showCount: true }}
-        name="Notes"
+        name="notes"
         label="Notes"
         {...tailLayout}
         placeholder=""

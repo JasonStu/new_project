@@ -1,6 +1,8 @@
 import { Row } from 'antd';
 import Open1 from '@/assets/open1.png';
 import { isArray } from 'lodash';
+import moment from 'moment';
+const USA_FORMAT = 'MM-DD-YYYY'
 
 export const default_dataSource = (key) => ({
   key,
@@ -23,42 +25,44 @@ export const default_columns = [
   },
   {
     title: 'Date',
-    dataIndex: 'date',
+    dataIndex: 'create_time',
     width: 100,
+    render: (i) => moment(i).format(USA_FORMAT)
+
   },
   {
     title: 'Pan ID',
-    dataIndex: 'PanID',
+    dataIndex: 'pan_id',
     width: 100,
   },
   {
     title: 'Shape',
-    dataIndex: 'Shape',
+    dataIndex: 'shape',
     width: 100,
   },
   {
     title: 'Height',
-    dataIndex: 'Height',
+    dataIndex: 'height',
     width: 100,
   },
   {
     title: 'Diameter',
-    dataIndex: 'Diameter',
+    dataIndex: 'diameter',
     width: 100,
   },
   {
     title: 'Length',
-    dataIndex: 'Length',
+    dataIndex: 'length',
     width: 100,
   },
   {
     title: 'Width',
-    dataIndex: 'Width',
+    dataIndex: 'width',
     width: 100,
   },
   {
     title: 'Radius',
-    dataIndex: 'Radius',
+    dataIndex: 'radius',
     width: 100,
   },
 ];

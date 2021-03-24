@@ -23,6 +23,10 @@ export const default_dataSource = (key) => ({
   Notes: 'Notes',
 });
 
+
+
+ 
+
 export const default_columns = [
   {
     title: 'ID',
@@ -31,56 +35,57 @@ export const default_columns = [
   },
   {
     title: 'Date',
-    dataIndex: 'date',
+    dataIndex: 'create_time',
     width: 100,
   },
   {
     title: 'Location ID',
-    dataIndex: 'LocationId',
+    dataIndex: 'location_id',
     width: 100,
   },
   {
     title: 'Company Name',
-    dataIndex: 'CompanyName',
+    dataIndex: 'company_name',
     width: 100,
   },
   {
     title: 'Contact #1',
-    dataIndex: 'Contact',
+    dataIndex: 'contact_1',
     width: 100,
   },
   {
     title: 'Contact #2',
-    dataIndex: 'Contact2',
+    dataIndex: 'contact_2',
     width: 100,
   },
   {
     title: 'Address',
-    dataIndex: 'Address',
     width: 100,
     render: (text, record) => {
-      const { Country, Province, City, District, Postalcode, RecieverName, RecieverPhone } = record;
+      const { address_country, address_province, address_city, address_district, address_postal_code, address_reciever_name, address_reciever_phone } = record;
+
+ 
       return (
-        `## ${District}
-        ${City},${Province},${Postalcode}
-        ${Country}
+        `## ${address_district}
+        ${address_city},${address_province},${address_postal_code}
+        ${address_country}
         `
       );
     },
   },
   {
     title: 'Courier Info',
-    dataIndex: 'CourierInfo',
+    dataIndex: 'courier_info',
     width: 100,
   },
   {
     title: 'Courier Account #',
-    dataIndex: 'CourierAccount',
+    dataIndex: 'courier_account',
     width: 100,
   },
   {
     title: 'Notes',
-    dataIndex: 'Notes',
+    dataIndex: 'notes',
     width: 100,
   },
 ];

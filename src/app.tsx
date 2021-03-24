@@ -3,13 +3,13 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history } from 'umi';
+import { history, } from 'umi';
 import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
-import type { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
+ import type { ResponseError } from 'umi-request';
+// import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
 import logo from '@/assets/logo.png';
+import Cookie from 'js-cookie'
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -33,7 +33,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  if (history.location.pathname !== '/login') {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -52,13 +52,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     onPageChange: () => {
-      const { location } = history;
+      // const { location } = history;
       // 如果没有登录，重定向到 login
       // if (!initialState?.currentUser && location.pathname !== '/user/login') {
       //   history.push('/user/login');
       // }
     },
-    menuHeaderRender: () => <img src={logo} alt="logo"/>,
+    menuHeaderRender: () => <img src={logo} alt="logo" />,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
@@ -108,8 +108,35 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
+const authHeaderInterceptor = (url: string, options: object) => {
+  const userInfo = Cookie.getJSON('userInfo')
+  // console.log('userInfo', userInfo);
+  let token = '';
+  if (userInfo) {
+    token = userInfo.token;
+  }
+  const authHeader = { 'x-cosmetics-token': token }
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
+const authResponseInterceptors = (response: Response,  ) => {
+  // console.log('response', response);
+  Cookie.remove('useInfo')
+  if (response.status === 403 || response.status === 401) {
+    history.replace({
+      pathname: '/login',
+    });
+  }
+  return response;
+};
+
 export const request: RequestConfig = {
   errorHandler,
+  requestInterceptors: [authHeaderInterceptor],
+  responseInterceptors: [authResponseInterceptors]
 };
 
 export const locale = {

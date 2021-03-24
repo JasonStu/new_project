@@ -1,31 +1,48 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
-
+import { getInventoryList, createInventory, updateInventory } from "@/services/inventory";
 const InventoryList = () => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState(
-    [...Array(13).keys()].map((item) => default_dataSource(item)),
+    []
   );
+  const [rowCount, setRowCount] = useState({
+    count: 0,
+    page: 1
+  });
+  const [itemID, setItemID] = useState('');
+
   const [initialValues, setInitialValues] = useState({});
   const [type, setType] = useState('Add');
   const actionRef = useRef();
 
+  const fetchData = async (params) => {
+    try {
+      const { data } = await getInventoryList(params)
+      setDataSource(data.rows)
+      setRowCount({ count: data.count, page: data.page })
+    } catch (error) {
+      // message.error(error)      
+      console.log('error', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData({
+      page: 1,
+      limit: 10,
+      item_id: itemID
+    })
+  }, [])
+
+
   const columns = [
     ...default_columns,
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      width: 100,
-    },
-    {
-      title: 'Quantity in stock',
-      dataIndex: 'stock',
-      width: 100,
-    },
+
     {
       title: 'Operation',
       dataIndex: 'operation',
@@ -40,16 +57,16 @@ const InventoryList = () => {
   ];
 
   const onSubmit = (value) => {
-    if(type === 'Edit') {
+    if (type === 'Edit') {
       const data = dataSource.map(item => {
-        if(item.key === value.key) {
+        if (item.key === value.key) {
           return value;
-        }else {
+        } else {
           return item;
         }
       })
       setDataSource(data);
-    }else {
+    } else {
       const data = [{
         ...default_dataSource(uniqueId()),
         ...value,

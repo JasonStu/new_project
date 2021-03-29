@@ -10,9 +10,16 @@ export type ItemDetailParamsType = {
   item_id: string;
 };
 
+export type CategoryIDParamsType = {
+
+  category_id: string;
+};
+
+
 export async function getItemList(params: ItemListParamsType) {
   return request(`/api/items/getItemsList?item_id=${params.item_id}&page=${params.page}&limit=${params.limit}`);
 }
+
 export async function createItems(params: {}) {
   return request(`/api/items/createItems`, { method: 'POST', data: params, requestType: 'form' });
 }
@@ -22,15 +29,15 @@ export async function updateItems(params: {}) {
 }
 
 export async function getItemsDetail(params: ItemDetailParamsType) {
-  return request(`/api/items/getItemsDetail?item_id=${params.item_id}&id=${params.id}`);
+  return request(`/api/items/getItemsDetail?id=${params.id}`);
 }
 
 export async function getCategoryList() {
   return request(`/api/items/getCategoryList`);
 }
 
-export async function getLineList() {
-  return request(`/api/items/getLineList`);
+export async function getLineList(params: CategoryIDParamsType) {
+  return request(`/api/items/getLineList?category_id=${params.category_id}`);
 }
 
 export async function checkItemsExist(params: ItemDetailParamsType) {

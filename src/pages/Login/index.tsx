@@ -34,7 +34,7 @@ const goto = () => {
   setTimeout(() => {
     const { query } = history.location;
     const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
+    history.push('/');
   }, 10);
 };
 
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
     setSubmitting(false);
   };
   const { code, } = userLoginState;
-  
+
   return (
     <div className={styles.container}>
       <div className={styles.lang}>{SelectLang && <SelectLang />}</div>

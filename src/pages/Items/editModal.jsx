@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Col, Row, Form, Input, Button, Upload } from 'antd';
 import {
   ModalForm,
@@ -6,10 +6,15 @@ import {
   ProFormTextArea,
   ProFormCheckbox,
   ProFormSelect,
+  ProFormUploadButton,
+
 } from '@ant-design/pro-form';
+import { useModel, useAccess, } from 'umi';
+
 import { CloudUploadOutlined } from '@ant-design/icons';
 
 import styles from './index.less';
+import { findLast } from 'lodash';
 
 const layout = {
   labelCol: { span: 6, offset: 1 },
@@ -33,34 +38,54 @@ const attrs = {
   placeholder: '',
 };
 
+
+
 const EditModal = (props) => {
-  const { actionRef, visible, setVisible, initialValues, onSubmit, type } = props;
+  const { actionRef, visible, setVisible, initialValues, categoryList, onSubmit, type, categoryOnChange, lineList, lineOnChange, loading } = props;
   const [form] = Form.useForm();
+ 
   const [fileList, setFileList] = useState([]);
   const [fileList2, setFileList2] = useState([]);
   const [fileList3, setFileList3] = useState([]);
+  const [fileList4, setFileList4] = useState([]);
+  const [dyFrom, setDyFrom] = useState([]);
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState
+  const { canAdmin, Sourcing, Engineering } = useAccess()
+
+
+console.log('Engineering',dyFrom);
 
   useEffect(() => {
-    const { openItem = [], closedItem = [], Factory = [] } = initialValues;
+    const { items_open_image = [], items_closed_image = [], items_factory_image = [], items_jerhel_image = [], line } = initialValues;
     form.resetFields();
-    if (openItem) {
-      setFileList(openItem);
+    if (items_open_image) {
+      setFileList(items_open_image);
     }
-    if (closedItem) {
-      setFileList2(closedItem);
+    if (items_closed_image) {
+      setFileList2(items_closed_image);
     }
-    if (Factory) {
-      setFileList3(Factory);
+    if (items_factory_image) {
+      setFileList3(items_factory_image);
+    }
+    if (items_jerhel_image) {
+      setFileList4(items_jerhel_image);
+    }
+    if (line && line.forms) {
+      setDyFrom(line.forms)
     }
   }, [initialValues]);
 
-  const onFinish = async (value) => {
+  const onFinish = async (value, e) => {
+    console.log('value==', value, e);
     onSubmit({
       ...initialValues,
       ...value,
-      openItem: fileList,
-      closedItem: fileList2,
-      Factory: fileList3,
+      eco_friendly: Number(value.eco_friendly),
+      line_id: JSON.parse(value.line_id).id
+      // openItem: fileList,
+      // closedItem: fileList2,
+      // Factory: fileList3,
     });
   };
 
@@ -74,27 +99,63 @@ const EditModal = (props) => {
   };
 
   const uploadProps = {
-    accept: 'png;jpg;',
+    // accept: 'png;jpg;',
     itemRender: renderUploadItem,
     listType: 'picture-card',
   };
 
-  const getThreeCol = (dom) => {
+  const getThreeCol = (dom, key) => {
+    if (key) {
+      return <Col key={key} span={8}>{dom}</Col>;
+
+    }
     return <Col span={8}>{dom}</Col>;
   };
-
+  const getSelectCol = (dom) => {
+    return <Col span={10}>{dom}</Col>;
+  };
+  const getLineForm = (form) => {
+    setDyFrom(form)
+  }
   const validateFileList = (rule, value, cb, list) => {
-    return list.length ? Promise.resolve() : Promise.reject('file is required');
+    if (!rule.required) {
+      return Promise.resolve()
+    }
+    return rule.required && list.length ? Promise.resolve() : Promise.reject(`${rule.field} is required!!!`);
+  }
+  const fileHandleMethod = (item) => {
+    if (item.originFileObj) {
+      return ({
+        name: item.name,
+        fileName: item.name,
+        originFileObj: item.originFileObj || '',
+        uid: item.uid
+      })
+    } else {
+      let arr = (item && item.url && item.url.length > 0) && item.url.split('/') || []
+      const name = findLast(arr)
+      const uid = name.split('_')[1]
+      return ({
+        name: decodeURI(findLast(arr)),
+        fileName: decodeURI(findLast(arr)),
+        url: item.url,
+        uid: uid
+      })
+    }
   }
 
   return (
     <ModalForm
+
       title={`${type} a new Item`}
       width="900px"
       visible={visible}
       onVisibleChange={setVisible}
       onFinish={onFinish}
       initialValues={initialValues}
+      modalProps={{
+        confirmLoading: loading
+      }}
       layout="horizontal"
       validateMessages={validateMessages}
       form={form}
@@ -106,202 +167,177 @@ const EditModal = (props) => {
       }}
       {...layout}
     >
-      <ProFormText
-        name="itemID"
+      {Sourcing && <ProFormText
+        name="item_id"
         label="Item ID"
         {...attrs}
         {...tailLayout}
         placeholder="JI-xx(JP-xx)"
-      />
+      />}
 
-      <Form.Item
-        label="Open Item"
-        name="openItem"
-        required={true}
+      {Sourcing && <ProFormUploadButton
+        accept='image/png,image/jpeg'
         rules={[
           {
             required: true,
             validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList),
           },
         ]}
-        wrapperCol={{ span: 12 }}
-      >
-        <div className={styles.uploadWrap}>
-          <Upload
-            {...uploadProps}
-            onChange={({ fileList }) => setFileList(fileList)}
-            fileList={fileList}
-          >
-            <div
-              style={{
-                paddingBottom: 130,
-              }}
-            >
-              <div>Upload</div>
-              <CloudUploadOutlined />
-            </div>
-          </Upload>
-        </div>
-      </Form.Item>
-      <Form.Item
-        label="Closed Item"
-        name="closedItem"
-        required={true}
+        fieldProps={{
+          fileList: fileList.map(item =>
+            fileHandleMethod(item)
+          ),
+          onPreview: (f) => {
+            console.log('f===', f);
+          },
+          onChange: (v) => {
+            console.log('v====', v);
+            setFileList(v.fileList)
+          }
+        }}
+        label="Open Item"
+        name="open_image"
+        listType='picture'
+        title='Upload'
+        max='2'
+      />}
+
+      {Sourcing && <ProFormUploadButton
+        accept='image/png,image/jpeg'
+        fieldProps={{
+          fileList: fileList2.map(item => fileHandleMethod(item)),
+          onPreview: (f) => {
+            console.log('f===', f);
+          },
+          onChange: (v) => {
+            setFileList2(v.fileList)
+          }
+        }}
         rules={[
           {
             required: true,
             validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList2),
           },
         ]}
-        wrapperCol={{ span: 12 }}
-      >
-        <div className={styles.uploadWrap}>
-          <Upload
-            {...uploadProps}
-            onChange={({ fileList }) => setFileList2(fileList)}
-            fileList={fileList2}
-          >
-            <div
-              style={{
-                paddingBottom: 130,
-              }}
-            >
-              <div>Upload</div>
-              <CloudUploadOutlined />
-            </div>
-          </Upload>
-        </div>
-      </Form.Item>
+        label="Closed Item"
+        name="closed_image"
+        listType='picture'
+        title='Upload'
+        max='2'
 
-      <ProFormSelect
-        name="Shape"
+      />}
+      {Sourcing && <ProFormSelect
+        name="shape"
         label="Shape"
         valueEnum={{
-          'Rectangle': 'Rectangle',
-          'circular': 'circular',
+          'other': 'Other',
+          'square': 'Square',
+          'round': 'Round',
+          'oval': 'Oval',
+          'rectangle': 'Rectangle',
         }}
         {...attrs}
         {...tailLayout}
-      />
-      <ProFormTextArea
+      />}
+      {Sourcing && <ProFormTextArea
         fieldProps={{ maxLength: 100, showCount: true }}
-        name="Description"
+        name="description"
         label="Description"
         {...attrs}
         {...tailLayout}
-      />
-      <ProFormText name="vendorName" label="Vendor Name" {...attrs} {...tailLayout} />
-      <ProFormText name="vendorCode" label="Vendor Code" {...attrs} {...tailLayout} />
-      <ProFormSelect
-        name="category"
+      />}
+      {Sourcing && <ProFormCheckbox
+        name="eco_friendly"
+        label="ECO"
+        {...attrs}
+        {...tailLayout}
+      />}
+
+
+      {Sourcing && <ProFormSelect
+        name="category_id"
         label="Category"
-        valueEnum={{
-          'Jars and Pots': 'Jars and Pots',
-          'Jars and Pots2': 'Jars and Pots2',
+        options={categoryList}
+        // initialValue="Jars and Pots"
+        fieldProps={{
+          onChange: categoryOnChange,
         }}
-        initialValue="Jars and Pots"
         {...attrs}
         {...tailLayout}
-      />
-      <ProFormSelect
-        name="Line"
+      />}
+
+      {Sourcing && <ProFormSelect
+        name="line_id"
         label="Line"
-        valueEnum={{
-          'Hinged Jars & Pots': 'Hinged Jars & Pots',
-          'Hinged Jars & Pots2': 'Hinged Jars & Pots2',
+        // valueEnum={lineList}
+        options={lineList}
+        fieldProps={{
+          onChange: (v) => {
+            let value = JSON.parse(v)
+            setDyFrom(value.from)
+            console.log('v=====>', value);
+          }
         }}
-        initialValue="Hinged Jars & Pots"
+        // initialValue="Hinged Jars & Pots"
         {...attrs}
         {...tailLayout}
-      />
+      />}
+      {Engineering && <Row>
+        {
+          dyFrom.map(i => {
+            if (i.type === 'input') {
+              return getThreeCol(
+                <ProFormText name={i.key} label={i.label} placeholder="" {...threeLayout} />, i.id
+              )
+            } else {
+              return getThreeCol(<ProFormSelect
 
-      <Row>
-        {getThreeCol(
-          <ProFormText name="Cover" label="Cover Material" placeholder="" {...threeLayout} />,
-        )}
-        {getThreeCol(
-          <ProFormText name="Base" label="Base Material" placeholder="" {...threeLayout} />,
-        )}
-        {getThreeCol(
-          <ProFormText name="Inner" label="Inner Jar Material" placeholder="" {...threeLayout} />,
-        )}
-        {getThreeCol(
-          <ProFormText
-            name="Sealing"
-            label="Sealing Disc Material"
-            placeholder=""
-            {...threeLayout}
-          />,
-        )}
-        {getThreeCol(
-          <ProFormText name="SifterMaterial" label="Sifter Material" placeholder="" {...threeLayout} />,
-        )}
-        {getThreeCol(
-          <ProFormText name="wells" label="# of wells" placeholder="" {...threeLayout} />,
-        )}
-        {getThreeCol(
-          <ProFormText
-            name="Capacity1"
-            label="Capacity"
-            fieldProps={{ type: 'number' }}
-            placeholder="ml"
-            {...threeLayout}
-          />,
-        )}
-        {getThreeCol(<ProFormText name="Pin" label="Pin Type" placeholder="" {...threeLayout} />)}
+                name={i.key}
+                label={i.label}
+                valueEnum={i.typeValue}
+                // options={lineList}
+                fieldProps={{
+                  onChange: (v) => {
+                    let value = JSON.parse(v)
+                    console.log('v=====>', value);
+                  }
+                }}
+                placeholder=''
+                // { ...attrs }
+                {...threeLayout}
+              />, i.id)
+            }
+
+          })
+        }
       </Row>
-
-      <ProFormSelect
-        name="Closure"
-        label="Closure Type"
-        valueEnum={{
-          1: 'Friction Clasp',
-          2: 'Friction Clasp2',
-        }}
-        initialValue="Friction Clasp"
-        placeholder=""
-        {...tailLayout}
-      />
-      <ProFormText name="Sifter" label="Sifter Type" {...tailLayout} placeholder="" />
-
-      <Form.Item label="Printable Area" style={{ marginBottom: 0, alignItems: 'center' }}>
-        <Form.Item
-          name="areaWidth"
-          label="Width"
-          labelCol={24}
-          wrapperCol={24}
-          colon={false}
-          style={{ display: 'inline-block', width: '30%' }}
-        >
-          <Input placeholder="mm" />
-        </Form.Item>
-        <Form.Item
-          name="areaLength"
-          label="Length"
-          labelCol={24}
-          wrapperCol={24}
-          colon={false}
-          style={{ display: 'inline-block', width: '30%', margin: '0 8px' }}
-        >
-          <Input placeholder="mm" />
-        </Form.Item>
-      </Form.Item>
-
-      <ProFormSelect
-        name="Cap"
-        label="Cap Type"
-        valueEnum={{
-          1: 'Single',
-          2: 'Single2',
-        }}
-        initialValue="Single"
-        placeholder=""
-        {...tailLayout}
-      />
+      }
       <Row>
         {getThreeCol(
           <ProFormText
-            name="Length"
+            name="vendor_name"
+            label="Vendor Name"
+            fieldProps={{ type: 'number' }}
+            placeholder="mm/in"
+            {...attrs}
+            {...threeLayout}
+          />,
+        )}
+        {getThreeCol(
+          <ProFormText
+            name="vendor_code"
+            label="Vendor Code"
+            // fieldProps={{ type: 'number' }}
+            // placeholder="mm"
+            {...attrs}
+            {...threeLayout}
+          />,
+        )}
+      </Row>
+      {Engineering && <Row>
+        {getThreeCol(
+          <ProFormText
+            name="length"
             label="Length"
             fieldProps={{ type: 'number' }}
             {...attrs}
@@ -309,9 +345,10 @@ const EditModal = (props) => {
             {...threeLayout}
           />,
         )}
+
         {getThreeCol(
           <ProFormText
-            name="Width"
+            name="width"
             label="Width"
             fieldProps={{ type: 'number' }}
             {...attrs}
@@ -321,7 +358,7 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Height"
+            name="height"
             label="Height"
             fieldProps={{ type: 'number' }}
             {...attrs}
@@ -331,34 +368,38 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Diameter"
+            name="diameter"
             label="Diameter"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
+            {...attrs}
             {...threeLayout}
           />,
         )}
+
         {getThreeCol(
           <ProFormText
-            name="PanWell"
+            name="pan_well"
             label="Pan Well"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
+            {...attrs}
             {...threeLayout}
           />,
         )}
         {getThreeCol(
           <ProFormText
-            name="PanDepth"
+            name="pan_depth"
             label="Pan Depth"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
+            {...attrs}
             {...threeLayout}
           />,
         )}
         {getThreeCol(
           <ProFormText
-            name="CupSize"
+            name="cup_size"
             label="Cup Size"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
@@ -367,34 +408,28 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
-            name="Caliber"
+            name="caliber"
             label="Caliber"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
+            {...attrs}
             {...threeLayout}
           />,
         )}
+
         {getThreeCol(
           <ProFormText
-            name="ofwells"
-            label="# of wells"
-            fieldProps={{ type: 'number' }}
-            placeholder="1 - 48"
-            {...threeLayout}
-          />,
-        )}
-        {getThreeCol(
-          <ProFormText
-            name="Dosage"
+            name="dosage"
             label="Dosage"
             fieldProps={{ type: 'number' }}
             placeholder="ml"
+            {...attrs}
             {...threeLayout}
           />,
         )}
         {getThreeCol(
           <ProFormText
-            name="Capacity"
+            name="capacity"
             label="Capacity"
             fieldProps={{ type: 'number' }}
             {...attrs}
@@ -402,57 +437,89 @@ const EditModal = (props) => {
             placeholder="ml"
           />,
         )}
+
         {getThreeCol(
           <ProFormText
-            name="Weight"
+            name="weight"
             label="Weight"
             fieldProps={{ type: 'number' }}
             {...attrs}
             {...threeLayout}
             placeholder="g"
           />,
-        )}{' '}
+        )}
+
         {getThreeCol(
           <ProFormText
-            name="Thread"
+            name="thread"
             label="Thread"
-            fieldProps={{ type: 'number' }}
+            // fieldProps={{ type: 'number' }}
             placeholder="mm"
+            {...attrs}
             {...threeLayout}
           />,
         )}
+
       </Row>
-      <Form.Item
-        label="Factory Drawings"
-        name="Factory"
-        required={true}
+      }
+      {<ProFormUploadButton
+        required={false}
+        accept='.pdf,.doc,.docx,.xml,application/msword'
+        // accept='.pdf'
+        fieldProps={{
+          fileList: fileList3.map(item => fileHandleMethod(item)),
+          onPreview: (f) => {
+            console.log('f===', f);
+          },
+
+          onChange: (v) => {
+            console.log('v====', v);
+            setFileList3(v.fileList)
+          }
+        }}
+        label="Factory_ Item"
+        name="factory_image"
+        listType='text'
+        title='Upload'
+        max='5'
         rules={[
           {
-            required: true,
-            validator: (rule, value, cb) => fileList3.length !== 0 ? cb() : cb('Factory Drawings is required'),
+            required: false,
+            validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList3),
           },
         ]}
-        wrapperCol={{ span: 12 }}
-      >
-        <div className={styles.uploadWrap}>
-          <Upload
-            {...uploadProps}
-            onChange={({ fileList }) => setFileList3(fileList)}
-            fileList={fileList3}
-          >
-            <div
-              style={{
-                paddingBottom: 130,
-              }}
-            >
-              <div>Upload</div>
-              <CloudUploadOutlined />
-            </div>
-          </Upload>
-        </div>
-      </Form.Item>
+      />}
+
+      { <ProFormUploadButton
+        required={false}
+        accept='.pdf,.doc,.docx,.xml,application/msword'
+        // accept='.pdf'
+        fieldProps={{
+          fileList: fileList4.map(item => fileHandleMethod(item)),
+          onPreview: (f) => {
+            console.log('f===', f);
+          },
+
+          onChange: (v) => {
+            console.log('v====', v);
+            setFileList4(v.fileList)
+          }
+        }}
+        label="Jerhel_ Item"
+        name="jerhel_image"
+        listType='text'
+        title='Upload'
+        max='5'
+        rules={[
+          {
+            required: false,
+            validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList4),
+          },
+        ]}
+      />}
+
       <Row justify="center">
-        <Button type="primary" htmlType="submit">
+        <Button loading={loading} type="primary" htmlType="submit">
           SUBMIT
         </Button>
       </Row>

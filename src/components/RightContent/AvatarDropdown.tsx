@@ -6,6 +6,7 @@ import { outLogin } from '@/services/login';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import Cookie from 'js-cookie'
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -15,23 +16,24 @@ export type GlobalHeaderRightProps = {
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
-  await outLogin();
+  // await outLogin();
+  Cookie.remove('userInfo')
   const { query, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/login' && !redirect) {
+  if (window.location.pathname !== '/login'  ) {
     history.replace({
       pathname: '/login',
-      search: stringify({
-        redirect: pathname,
-      }),
+      // search: stringify({
+      //   redirect: pathname,
+      // }),
     });
   }
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-
+ 
   const onMenuClick = useCallback(
     (event: {
       key: React.Key;
@@ -45,32 +47,32 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         loginOut();
         return;
       }
-      history.push(`/account/${key}`);
+      history.push(`/${key}`);
     },
     [initialState, setInitialState],
   );
 
-  // const loading = (
-  //   <span className={`${styles.action} ${styles.account}`}>
-  //     <Spin
-  //       size="small"
-  //       style={{
-  //         marginLeft: 8,
-  //         marginRight: 8,
-  //       }}
-  //     />
-  //   </span>
-  // );
+  const loading = (
+    <span className={`${styles.action} ${styles.account}`}>
+      <Spin
+        size="small"
+        style={{
+          marginLeft: 8,
+          marginRight: 8,
+        }}
+      />
+    </span>
+  );
 
-  // if (!initialState) {
-  //   return loading;
-  // }
+  if (!initialState) {
+    return loading;
+  }
 
-  // const { currentUser } = initialState;
+  const { currentUser } = initialState;
 
-  // if (!currentUser || !currentUser.name) {
-  //   return loading;
-  // }
+  if (!currentUser || !currentUser.username) {
+    return loading;
+  }
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -90,15 +92,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出登录
+        Logout
       </Menu.Item>
     </Menu>
   );
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
+       
         <Avatar className={styles.avatar} icon={<UserOutlined />} alt="avatar" />
-        {/* <span className={`${styles.name} anticon`}>{currentUser.name}</span> */}
+        <span className={`${styles.name}  `}>{currentUser.username}</span>
       </span>
     </HeaderDropdown>
   );

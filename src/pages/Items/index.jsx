@@ -202,7 +202,7 @@ const ItemsList = () => {
 
       <EditModal
         loading={loading}
-        ref={actionRef}
+        // ref={actionRef}
         visible={visible}
         categoryList={categoryList}
         lineList={lineList}

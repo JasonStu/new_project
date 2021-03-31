@@ -41,7 +41,7 @@ export async function getLineList(params: CategoryIDParamsType) {
 }
 
 export async function checkItemsExist(params: ItemDetailParamsType) {
-  return request(`/api/items/getLineList?item_id${params.item_id}`);
+  return request(`/api/items/checkItemsExist?item_id=${params.item_id}`);
 }
 
 

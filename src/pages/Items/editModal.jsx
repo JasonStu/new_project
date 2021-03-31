@@ -43,7 +43,7 @@ const attrs = {
 const EditModal = (props) => {
   const { actionRef, visible, setVisible, initialValues, categoryList, onSubmit, type, categoryOnChange, lineList, lineOnChange, loading } = props;
   const [form] = Form.useForm();
- 
+
   const [fileList, setFileList] = useState([]);
   const [fileList2, setFileList2] = useState([]);
   const [fileList3, setFileList3] = useState([]);
@@ -54,7 +54,7 @@ const EditModal = (props) => {
   const { canAdmin, Sourcing, Engineering } = useAccess()
 
 
-console.log('Engineering',dyFrom);
+  // console.log('Engineering',dyFrom);
 
   useEffect(() => {
     const { items_open_image = [], items_closed_image = [], items_factory_image = [], items_jerhel_image = [], line } = initialValues;
@@ -282,6 +282,18 @@ console.log('Engineering',dyFrom);
         {...attrs}
         {...tailLayout}
       />}
+      <ProFormText
+        name="vendor_code"
+        label="Vendor Code"
+        {...attrs}
+        {...tailLayout}
+      />
+      <ProFormText
+        name="vendor_name"
+        label="Vendor Name"          
+        {...attrs}
+        {...tailLayout}
+      />
       {Engineering && <Row>
         {
           dyFrom.map(i => {
@@ -312,28 +324,7 @@ console.log('Engineering',dyFrom);
         }
       </Row>
       }
-      <Row>
-        {getThreeCol(
-          <ProFormText
-            name="vendor_name"
-            label="Vendor Name"
-            fieldProps={{ type: 'number' }}
-            placeholder="mm/in"
-            {...attrs}
-            {...threeLayout}
-          />,
-        )}
-        {getThreeCol(
-          <ProFormText
-            name="vendor_code"
-            label="Vendor Code"
-            // fieldProps={{ type: 'number' }}
-            // placeholder="mm"
-            {...attrs}
-            {...threeLayout}
-          />,
-        )}
-      </Row>
+
       {Engineering && <Row>
         {getThreeCol(
           <ProFormText
@@ -372,7 +363,7 @@ console.log('Engineering',dyFrom);
             label="Diameter"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -383,7 +374,7 @@ console.log('Engineering',dyFrom);
             label="Pan Well"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -393,7 +384,7 @@ console.log('Engineering',dyFrom);
             label="Pan Depth"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -412,7 +403,7 @@ console.log('Engineering',dyFrom);
             label="Caliber"
             fieldProps={{ type: 'number' }}
             placeholder="mm"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -423,7 +414,7 @@ console.log('Engineering',dyFrom);
             label="Dosage"
             fieldProps={{ type: 'number' }}
             placeholder="ml"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -432,7 +423,7 @@ console.log('Engineering',dyFrom);
             name="capacity"
             label="Capacity"
             fieldProps={{ type: 'number' }}
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
             placeholder="ml"
           />,
@@ -455,7 +446,7 @@ console.log('Engineering',dyFrom);
             label="Thread"
             // fieldProps={{ type: 'number' }}
             placeholder="mm"
-            {...attrs}
+            // {...attrs}
             {...threeLayout}
           />,
         )}
@@ -463,7 +454,7 @@ console.log('Engineering',dyFrom);
       </Row>
       }
       {<ProFormUploadButton
-        required={false}
+      
         accept='.pdf,.doc,.docx,.xml,application/msword'
         // accept='.pdf'
         fieldProps={{
@@ -484,14 +475,14 @@ console.log('Engineering',dyFrom);
         max='5'
         rules={[
           {
-            required: false,
+            required: true,
             validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList3),
           },
         ]}
       />}
 
       { <ProFormUploadButton
-        required={false}
+        
         accept='.pdf,.doc,.docx,.xml,application/msword'
         // accept='.pdf'
         fieldProps={{
@@ -512,7 +503,7 @@ console.log('Engineering',dyFrom);
         max='5'
         rules={[
           {
-            required: false,
+            required: true,
             validator: (rule, value, cb) => validateFileList(rule, value, cb, fileList4),
           },
         ]}

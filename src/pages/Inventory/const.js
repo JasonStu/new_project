@@ -167,6 +167,7 @@ export const default_columns = [
     title: 'Discontinued',
     dataIndex: 'discontinued',
     width: 100,
+    render: (i) => <div>{i ? 'YES' : 'NO'}</div>
   },
 
 

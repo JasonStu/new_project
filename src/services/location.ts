@@ -17,3 +17,6 @@ export async function createLocations(params: {}) {
 export async function updateLocations(params: {}) {
   return request(`/api/locations/updateLocations`, { method: 'POST', data: params });
 }
+export async function exportExcel() {
+  return request(`/api/locations/exportExcel`, { responseType: 'arrayBuffer' });
+}

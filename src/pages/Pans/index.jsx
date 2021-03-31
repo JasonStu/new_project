@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import CustomPtoTable from '@/components/CustomProTable';
 import { default_columns, default_dataSource } from './const';
 import { ArrowDownOutlined } from '@ant-design/icons';
-import { getPansList } from "@/services/pan";
+import { getPansList, exportExcel } from "@/services/pan";
 import { Button, message } from 'antd';
+import moment from 'moment';
 
 const PansList = () => {
 
@@ -47,6 +48,7 @@ const PansList = () => {
         selfOptions={{
           title: 'Pans list',
           searchLabel: 'Pan ID',
+
           onSearch: (value) => {
             setPanID(value)
             fetchData({
@@ -68,7 +70,23 @@ const PansList = () => {
           }
         }}
         toolBarRender={() => [
-          <Button key="export">
+          <Button key="export"
+            onClick={async () => {
+              try {
+                const data = await exportExcel()
+                let url = window.URL.createObjectURL(new Blob([data], { type: 'application/vnd.ms-excel' })) //处理文档流
+                let link = document.createElement('a')
+                link.style.display = 'none'
+                link.href = url
+                link.download = `${moment().format('YYYYMMDDHHMMSS')}_Pan`
+                document.body.appendChild(link)
+                link.click()
+              } catch (error) {
+                console.log('error', error);
+              }
+
+
+            }}>
             <ArrowDownOutlined /> Export
           </Button>,
         ]}

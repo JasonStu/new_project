@@ -20,5 +20,10 @@ export async function getWellsDetail() {
   return request(`/api/wells/updateWells`);
 }
 
+export async function exportExcel() {
+  return request(`/api/wells/exportExcel`, { responseType: 'arrayBuffer' });
+}
+
+
 
 

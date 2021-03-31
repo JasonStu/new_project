@@ -43,6 +43,11 @@ export async function getLineList(params: CategoryIDParamsType) {
 export async function checkItemsExist(params: ItemDetailParamsType) {
   return request(`/api/items/checkItemsExist?item_id=${params.item_id}`);
 }
+export async function exportExcel() {
+  return request(`/api/items/exportExcel`,{responseType:'arrayBuffer'});
+}
+
+
 
 
 

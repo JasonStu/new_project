@@ -4,8 +4,9 @@ import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
-import { getInventoryList, createInventory, updateInventory } from "@/services/inventory";
+import { getInventoryList, createInventory, updateInventory ,exportExcel} from "@/services/inventory";
 import { message } from 'antd';
+import moment from 'moment';
 const InventoryList = () => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState(
@@ -104,6 +105,17 @@ const InventoryList = () => {
             setType('Add');
             setVisible(true);
             setInitialValues({});
+          },
+          onExport: async () => {
+            const data = await exportExcel()
+            let url = window.URL.createObjectURL(new Blob([data], { type: 'application/vnd.ms-excel' })) //处理文档流
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = `${moment().format('YYYYMMDDHHMMSS')}_Inventory`
+            document.body.appendChild(link)
+            link.click()
+
           },
           onSearch: (value) => {
             setItemID(value)

@@ -4,8 +4,9 @@ import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
-import { getItemList, createItems, updateItems, getItemsDetail, getCategoryList, getLineList, checkItemsExist } from "@/services/item";
+import { getItemList, createItems, updateItems, getItemsDetail, getCategoryList, getLineList, checkItemsExist, exportExcel } from "@/services/item";
 import { message, Spin } from 'antd';
+import moment from 'moment';
 const ItemsList = () => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
@@ -172,6 +173,16 @@ const ItemsList = () => {
         columns={columns}
         selfOptions={{
           title: 'Items list',
+          onExport: async () => {
+            const data = await exportExcel()
+            let url = window.URL.createObjectURL(new Blob([data], { type: 'application/vnd.ms-excel' })) //处理文档流
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = `${moment().format('YYYYMMDDHHMMSS')}_item`
+            document.body.appendChild(link)
+            link.click()
+          },
           onAdd: () => {
             setType('Add');
             setVisible(true);

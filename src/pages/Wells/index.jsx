@@ -4,8 +4,9 @@ import CustomPtoTable from '@/components/CustomProTable';
 import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
-import { getWellList, createWells, updateWells, getWellsDetail } from "@/services/well";
+import { getWellList, createWells, updateWells, getWellsDetail, exportExcel } from "@/services/well";
 import { message } from 'antd';
+import moment from 'moment';
 
 const WellsList = () => {
   const [visible, setVisible] = useState(false);
@@ -16,7 +17,7 @@ const WellsList = () => {
     count: 0,
     page: 1
   });
-  const [wellID, setWellID] = useState('' );
+  const [wellID, setWellID] = useState('');
   const [initialValues, setInitialValues] = useState({});
   const [type, setType] = useState('Add');
   const actionRef = useRef();
@@ -104,6 +105,16 @@ const WellsList = () => {
             setType('Add');
             setVisible(true);
             setInitialValues({});
+          },
+          onExport: async () => {
+            const data = await exportExcel()
+            let url = window.URL.createObjectURL(new Blob([data], { type: 'application/vnd.ms-excel' })) //处理文档流
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = `${moment().format('YYYYMMDDHHMMSS')}_Well`
+            document.body.appendChild(link)
+            link.click()
           },
           onSearch: (value) => {
             setWellID(value)

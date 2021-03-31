@@ -21,5 +21,10 @@ export async function checkItemsExist(params: InventoryParamsType) {
   return request(`/api/items/checkItemsExist?item_id=${params.item_id}`, { method: 'GET', });
 }
 
+export async function exportExcel() {
+  return request(`/api/inventory/exportExcel`, { responseType: 'arrayBuffer' });
+}
+
+
 
 

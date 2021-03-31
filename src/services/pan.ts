@@ -9,3 +9,6 @@ export type PansListParamsType = {
 export async function getPansList(params: PansListParamsType) {
   return request(`/api/pans/getPansList?pan_id=${params.pan_id}&page=${params.page}&limit=${params.limit}`,);
 }
+export async function exportExcel() {
+  return request(`/api/pans/exportExcel`, { responseType: 'arrayBuffer' });
+}

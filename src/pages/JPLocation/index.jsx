@@ -5,7 +5,8 @@ import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
 import { message } from 'antd';
-import { getLocationsList, createLocations, updateLocations, } from "@/services/location";
+import { getLocationsList, createLocations, updateLocations,exportExcel } from "@/services/location";
+import moment from 'moment';
 
 
 const JPLocationList = () => {
@@ -100,6 +101,17 @@ const JPLocationList = () => {
             setType('Add');
             setVisible(true);
             setInitialValues({});
+          },
+          onExport: async () => {
+            const data = await exportExcel()
+            let url = window.URL.createObjectURL(new Blob([data], { type: 'application/vnd.ms-excel' })) //处理文档流
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = `${moment().format('YYYYMMDDHHMMSS')}_Location`
+            document.body.appendChild(link)
+            link.click()
+
           },
           onSearch: (value) => {
             setLocationID(value)

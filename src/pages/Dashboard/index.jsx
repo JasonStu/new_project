@@ -26,16 +26,20 @@ const DashboardList = () => {
   const [initialValues, setInitialValues] = useState({});
   const [type, setType] = useState('Edit');
 
-  const fetchData = async () => {
+  const fetchData = async (params) => {
     const result = await getDashboardMainInfo()
-    const { data } = await getDashboardList()
+    const { data } = await getDashboardList(params)
     setUserHeaderState(result.data)
     setDataSource(data.rows)
     setRowCount({ count: data.count, page: data.page })
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData({
+      page: 1,
+      limit: 10,
+
+    })
   }, [])
 
   const onSubmit = async (value) => {
@@ -76,7 +80,11 @@ const DashboardList = () => {
       } else {
         // const data = await createItems(formData)
       }
-      fetchData()
+      fetchData({
+        page: 1,
+        limit: 10,
+
+      })
       setLoading(false)
       setVisible(false);
 
@@ -163,6 +171,10 @@ const DashboardList = () => {
               try {
                 const { code } = await approvedItemsUpdate({ id: text.id })
                 if (code) {
+                  fetchData({
+                    page: 1,
+                    limit: 10,
+                  })
                   return message.success('Publish Update Success!')
                 }
                 message.error('Publish Update fail!')
@@ -184,6 +196,10 @@ const DashboardList = () => {
               try {
                 const { code } = await approvedItemsNew({ id: text.id })
                 if (code) {
+                  fetchData({
+                    page: 1,
+                    limit: 10,
+                  })
                   return message.success('Publish New Success!')
                 }
                 message.error('Publish New fail!')
@@ -288,7 +304,7 @@ const DashboardList = () => {
                 fetchData({
                   page,
                   limit: 10,
-                  well_id: wellID
+
                 })
                 console.log('next', page);
               }

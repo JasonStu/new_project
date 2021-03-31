@@ -122,16 +122,7 @@ const Login: React.FC = () => {
               handleSubmit(values as LoginParamsType);
             }}
           >
-            <Tabs activeKey={type} onChange={setType}>
-              <Tabs.TabPane
-                key="account"
-                tab={intl.formatMessage({
-                  id: 'pages.login.accountLogin.tab',
-                  defaultMessage: '账户密码登录',
-                })}
-              />
 
-            </Tabs>
 
             {code + '' === '0' && (
               <LoginMessage
@@ -141,8 +132,9 @@ const Login: React.FC = () => {
                 })}
               />
             )}
-            {type === 'account' && (
-              <>
+            {(
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ textAlign: 'center' ,fontSize:'28px',fontWeight:'bold',margin:'20px 0'}}>Log in to your account</div>
                 <ProFormText
                   name="username"
                   fieldProps={{
@@ -187,7 +179,7 @@ const Login: React.FC = () => {
                     },
                   ]}
                 />
-              </>
+              </div>
             )}
           </ProForm>
         </div>

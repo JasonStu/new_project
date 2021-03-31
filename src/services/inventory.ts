@@ -17,6 +17,9 @@ export async function updateInventory(params: {}) {
   return request(`/api/inventory/updateInventory`, { method: 'POST', data: params, });
 }
 
+export async function checkItemsExist(params: InventoryParamsType) {
+  return request(`/api/items/checkItemsExist?item_id=${params.item_id}`, { method: 'GET', });
+}
 
 
 

@@ -5,7 +5,7 @@ import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history, } from 'umi';
 import RightContent from '@/components/RightContent';
- import type { ResponseError } from 'umi-request';
+import type { ResponseError } from 'umi-request';
 // import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
 import logo from '@/assets/logo.png';
@@ -30,7 +30,8 @@ export async function getInitialState(): Promise<{
     // } catch (error) {
     //   history.push('/user/login');
     // }
-    return undefined;
+    return Cookie.getJSON('userInfo')
+      ;
   };
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/login') {
@@ -52,11 +53,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     onPageChange: () => {
-      // const { location } = history;
-      // 如果没有登录，重定向到 login
-      // if (!initialState?.currentUser && location.pathname !== '/user/login') {
-      //   history.push('/user/login');
-      // }
+      const { location } = history;
+      //如果没有登录，重定向到 login
+      if (!initialState?.currentUser && location.pathname !== '/login') {
+        history.push('/login');
+      }
     },
     menuHeaderRender: () => <img src={logo} alt="logo" />,
     // 自定义 403 页面
@@ -122,7 +123,7 @@ const authHeaderInterceptor = (url: string, options: object) => {
   };
 };
 
-const authResponseInterceptors = (response: Response,  ) => {
+const authResponseInterceptors = (response: Response,) => {
   // console.log('response', response);
   Cookie.remove('useInfo')
   if (response.status === 403 || response.status === 401) {

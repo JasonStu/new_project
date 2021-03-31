@@ -1,6 +1,6 @@
 import { Row } from 'antd';
 import Open1 from '@/assets/open1.png';
-import { isArray } from 'lodash';
+import { isArray ,findLast} from 'lodash';
 import moment from 'moment';
 const USA_FORMAT = 'MM-DD-YYYY'
 
@@ -16,6 +16,23 @@ const renderImgList = (text, record, index) => {
             key={item.url}
           />
         ))}
+      </Row>
+    );
+  }
+  return <div />;
+};
+
+const renderFileList = (text, record, index) => {
+  // console.log('text',text);
+  if (isArray(text) && text.length) {
+    return (
+      <Row key={index}>
+        {text.map((item) => {
+
+          let arr = (item && item.url && item.url.length > 0) && item.url.split('/') || []
+          // console.log('arrarrarrarrarrarr', arr);
+          return <a onClick={()=>window.open(item.url )}>{decodeURI(findLast(arr))}</a>
+        })}
       </Row>
     );
   }
@@ -126,11 +143,14 @@ export const default_columns = [
     title: 'Category',
     dataIndex: 'category',
     width: 150,
+    render: (i) => <div>{i.name}</div>
   },
   {
     title: 'Line',
     dataIndex: 'line',
     width: 200,
+    render: (i) => <div>{i.name}</div>
+
   },
   {
     title: 'ECO',
@@ -229,13 +249,13 @@ export const default_columns = [
   {
     title: 'Factory Drawing',
     dataIndex: 'items_factory_image',
-    width: 200,
-    render: renderImgList
+    width: 300,
+    render: renderFileList
   },
   {
     title: 'Jerhel Drawing',
     dataIndex: 'items_jerhel_image',
-    width: 200,
-    render: renderImgList
+    width: 300,
+    render: renderFileList
   },
 ];

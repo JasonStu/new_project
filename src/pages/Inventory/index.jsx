@@ -5,6 +5,7 @@ import EditModal from './editModal';
 import { default_columns, default_dataSource } from './const';
 import { uniqueId } from 'lodash';
 import { getInventoryList, createInventory, updateInventory } from "@/services/inventory";
+import { message } from 'antd';
 const InventoryList = () => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState(
@@ -56,25 +57,40 @@ const InventoryList = () => {
     },
   ];
 
-  const onSubmit = (value) => {
-    if (type === 'Edit') {
-      const data = dataSource.map(item => {
-        if (item.key === value.key) {
-          return value;
+  const onSubmit = async (value) => {
+    try {
+      if (type === 'Edit') {
+        const { code, msg } = await updateInventory(value)
+        if (code) {
+          fetchData({
+            page: 1,
+            limit: 10,
+            item_id: itemID
+          })
+          setVisible(false);
         } else {
-          return item;
+          message.error(msg)
         }
-      })
-      setDataSource(data);
-    } else {
-      const data = [{
-        ...default_dataSource(uniqueId()),
-        ...value,
-        key: uniqueId('add_'),
-      }].concat(dataSource);
-      setDataSource(data);
+      } else {
+        console.log('value', value);
+        const { code, msg } = await createInventory(value)
+        if (code) {
+          fetchData({
+            page: 1,
+            limit: 10,
+            item_id: itemID
+          })
+          setVisible(false);
+        } else {
+          message.error(msg)
+        }
+      }
+
+    } catch (error) {
+      console.log('error', error);
     }
-    setVisible(false);
+
+
   };
 
   return (
@@ -89,7 +105,27 @@ const InventoryList = () => {
             setVisible(true);
             setInitialValues({});
           },
+          onSearch: (value) => {
+            setItemID(value)
+            fetchData({
+              page: 1,
+              limit: 10,
+              item_id: value
+            })
+          },
+          pagination: {
+            total: rowCount.count,
+            current: rowCount.page,
+            onChange: (page) => {
+              fetchData({
+                page: page,
+                limit: 10,
+                item_id: itemID
+              })
+            }
+          }
         }}
+
         actionRef={actionRef}
       />
 
@@ -98,6 +134,7 @@ const InventoryList = () => {
         visible={visible}
         setVisible={setVisible}
         onSubmit={onSubmit}
+        setInitialValues={setInitialValues}
         initialValues={initialValues}
         type={type}
       />

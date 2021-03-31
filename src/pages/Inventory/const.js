@@ -109,9 +109,9 @@ export const default_columns = [
     title: 'Item ID',
     dataIndex: 'item_id',
     width: 100,
-    
+
   },
- 
+
   {
     title: 'Item Name',
     dataIndex: 'item_name',
@@ -168,6 +168,6 @@ export const default_columns = [
     dataIndex: 'discontinued',
     width: 100,
   },
-   
- 
+
+
 ];

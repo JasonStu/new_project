@@ -7,7 +7,7 @@ import {
   ProFormCheckbox,
   ProFormSelect,
   ProFormUploadButton,
-
+  ProFormSwitch
 } from '@ant-design/pro-form';
 import { useModel, useAccess, } from 'umi';
 
@@ -48,6 +48,7 @@ const EditModal = (props) => {
   const [fileList2, setFileList2] = useState([]);
   const [fileList3, setFileList3] = useState([]);
   const [fileList4, setFileList4] = useState([]);
+  const [ecoFriendly, setEcoFriendly] = useState(true);
   const [dyFrom, setDyFrom] = useState([]);
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState
@@ -57,7 +58,7 @@ const EditModal = (props) => {
   // console.log('Engineering',dyFrom);
 
   useEffect(() => {
-    const { items_open_image = [], items_closed_image = [], items_factory_image = [], items_jerhel_image = [], line } = initialValues;
+    const { items_open_image = [], items_closed_image = [], items_factory_image = [], items_jerhel_image = [], line, eco_friendly } = initialValues;
     form.resetFields();
     if (items_open_image) {
       setFileList(items_open_image);
@@ -74,14 +75,19 @@ const EditModal = (props) => {
     if (line && line.forms) {
       setDyFrom(line.forms)
     }
+    if (eco_friendly !== undefined && ecoFriendly !== null) {
+      setEcoFriendly(eco_friendly)
+    } else {
+      setEcoFriendly(true)
+    }
   }, [initialValues]);
 
   const onFinish = async (value, e) => {
-    console.log('value==', value, e);
+    console.log('value==', value, ecoFriendly);
     onSubmit({
       ...initialValues,
       ...value,
-      eco_friendly: Number(value.eco_friendly),
+      eco_friendly: Number(ecoFriendly),
       line_id: JSON.parse(value.line_id).id
       // openItem: fileList,
       // closedItem: fileList2,
@@ -167,16 +173,18 @@ const EditModal = (props) => {
       }}
       {...layout}
     >
-      {Sourcing && <ProFormText
+      <ProFormText
+        disabled={!Sourcing}
         name="item_id"
         label="Item ID"
         {...attrs}
         {...tailLayout}
         placeholder="JI-xx(JP-xx)"
-      />}
+      />
 
-      {Sourcing && <ProFormUploadButton
+      {  <ProFormUploadButton
         accept='image/png,image/jpeg'
+        disabled={!Sourcing}
         rules={[
           {
             required: true,
@@ -202,8 +210,9 @@ const EditModal = (props) => {
         max='2'
       />}
 
-      {Sourcing && <ProFormUploadButton
+      {  <ProFormUploadButton
         accept='image/png,image/jpeg'
+        disabled={!Sourcing}
         fieldProps={{
           fileList: fileList2.map(item => fileHandleMethod(item)),
           onPreview: (f) => {
@@ -226,7 +235,8 @@ const EditModal = (props) => {
         max='2'
 
       />}
-      {Sourcing && <ProFormSelect
+      {  <ProFormSelect
+        disabled={!Sourcing}
         name="shape"
         label="Shape"
         valueEnum={{
@@ -239,22 +249,35 @@ const EditModal = (props) => {
         {...attrs}
         {...tailLayout}
       />}
-      {Sourcing && <ProFormTextArea
+      { <ProFormTextArea
+        disabled={!Sourcing}
         fieldProps={{ maxLength: 100, showCount: true }}
         name="description"
         label="Description"
         {...attrs}
         {...tailLayout}
       />}
-      {Sourcing && <ProFormCheckbox
+
+
+      <ProFormSwitch
+        disabled={!Sourcing}
         name="eco_friendly"
-        label="ECO"
-        {...attrs}
+        label="ECO Friendly"
+        fieldProps={{
+          defaultChecked: ecoFriendly,
+          onChange: (v) => {
+            setEcoFriendly(v)
+            // console.log('onChange===', v);
+          }
+        }}
+        // {...attrs}
         {...tailLayout}
-      />}
+      />
 
 
-      {Sourcing && <ProFormSelect
+
+      { <ProFormSelect
+        disabled={!Sourcing}
         name="category_id"
         label="Category"
         options={categoryList}
@@ -266,7 +289,8 @@ const EditModal = (props) => {
         {...tailLayout}
       />}
 
-      {Sourcing && <ProFormSelect
+      { <ProFormSelect
+        disabled={!Sourcing}
         name="line_id"
         label="Line"
         // valueEnum={lineList}
@@ -290,20 +314,22 @@ const EditModal = (props) => {
       />
       <ProFormText
         name="vendor_name"
-        label="Vendor Name"          
+        label="Vendor Name"
         {...attrs}
         {...tailLayout}
       />
-      {Engineering && <Row>
+      {  <Row>
         {
           dyFrom.map(i => {
             if (i.type === 'input') {
               return getThreeCol(
-                <ProFormText name={i.key} label={i.label} placeholder="" {...threeLayout} />, i.id
+                <ProFormText
+                  disabled={!Engineering}
+                  name={i.key} label={i.label} placeholder="" {...threeLayout} />, i.id
               )
             } else {
               return getThreeCol(<ProFormSelect
-
+                disabled={!Engineering}
                 name={i.key}
                 label={i.label}
                 valueEnum={i.typeValue}
@@ -325,13 +351,15 @@ const EditModal = (props) => {
       </Row>
       }
 
-      {Engineering && <Row>
+      {  <Row>
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="length"
             label="Length"
             fieldProps={{ type: 'number' }}
             {...attrs}
+            rules={[{ required: Engineering }]}
             placeholder="mm"
             {...threeLayout}
           />,
@@ -339,26 +367,31 @@ const EditModal = (props) => {
 
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="width"
             label="Width"
             fieldProps={{ type: 'number' }}
             {...attrs}
+            rules={[{ required: Engineering }]}
             placeholder="mm"
             {...threeLayout}
           />,
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="height"
             label="Height"
             fieldProps={{ type: 'number' }}
             {...attrs}
+            rules={[{ required: Engineering }]}
             placeholder="mm"
             {...threeLayout}
           />,
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="diameter"
             label="Diameter"
             fieldProps={{ type: 'number' }}
@@ -370,6 +403,7 @@ const EditModal = (props) => {
 
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="pan_well"
             label="Pan Well"
             fieldProps={{ type: 'number' }}
@@ -380,6 +414,7 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="pan_depth"
             label="Pan Depth"
             fieldProps={{ type: 'number' }}
@@ -390,6 +425,7 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="cup_size"
             label="Cup Size"
             fieldProps={{ type: 'number' }}
@@ -399,6 +435,7 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="caliber"
             label="Caliber"
             fieldProps={{ type: 'number' }}
@@ -410,6 +447,7 @@ const EditModal = (props) => {
 
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="dosage"
             label="Dosage"
             fieldProps={{ type: 'number' }}
@@ -420,6 +458,7 @@ const EditModal = (props) => {
         )}
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="capacity"
             label="Capacity"
             fieldProps={{ type: 'number' }}
@@ -431,10 +470,12 @@ const EditModal = (props) => {
 
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="weight"
             label="Weight"
             fieldProps={{ type: 'number' }}
             {...attrs}
+            rules={[{ required: Engineering }]}
             {...threeLayout}
             placeholder="g"
           />,
@@ -442,6 +483,7 @@ const EditModal = (props) => {
 
         {getThreeCol(
           <ProFormText
+            disabled={!Engineering}
             name="thread"
             label="Thread"
             // fieldProps={{ type: 'number' }}
@@ -454,7 +496,7 @@ const EditModal = (props) => {
       </Row>
       }
       {<ProFormUploadButton
-      
+
         accept='.pdf,.doc,.docx,.xml,application/msword'
         // accept='.pdf'
         fieldProps={{
@@ -482,7 +524,7 @@ const EditModal = (props) => {
       />}
 
       { <ProFormUploadButton
-        
+
         accept='.pdf,.doc,.docx,.xml,application/msword'
         // accept='.pdf'
         fieldProps={{

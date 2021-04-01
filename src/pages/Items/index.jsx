@@ -106,48 +106,57 @@ const ItemsList = () => {
   const onSubmit = async (value) => {
     let formData = new FormData()
     for (const key in value) {
-      formData.append(key, value[key])
-      if (key === 'open_image') {
-        for (const file of value[key]) {
-          file.originFileObj && formData.append('open_image', file.originFileObj)
-          console.log('file===>', file);
-          file.url && formData.append('open_image_urls', file.url)
+      if (value[key] !== null &&value[key] !== undefined) {
+        formData.append(key, value[key])
+        if (key === 'open_image') {
+          for (const file of value[key]) {
+            file.originFileObj && formData.append('open_image', file.originFileObj)
+            console.log('file===>', file);
+            file.url && formData.append('open_image_urls', file.url)
+          }
         }
-      }
-      if (key === 'closed_image') {
-        for (const file of value[key]) {
-          file.originFileObj && formData.append('closed_image', file.originFileObj)
+        if (key === 'closed_image') {
+          for (const file of value[key]) {
+            file.originFileObj && formData.append('closed_image', file.originFileObj)
 
-          file.url && formData.append('closed_image_urls', file.url)
+            file.url && formData.append('closed_image_urls', file.url)
+          }
         }
-      }
-      if (key === 'factory_image') {
-        for (const file of value[key]) {
-          file.originFileObj && formData.append('factory_image', file.originFileObj)
-          file.url && formData.append('factory_image_urls', file.url)
+        if (key === 'factory_image') {
+          for (const file of value[key]) {
+            file.originFileObj && formData.append('factory_image', file.originFileObj)
+            file.url && formData.append('factory_image_urls', file.url)
+          }
         }
-      }
-      if (key === 'jerhel_image') {
-        for (const file of value[key]) {
-          file.originFileObj && formData.append('jerhel_image', file.originFileObj)
-          file.url && formData.append('jerhel_image_urls', file.url)
+        if (key === 'jerhel_image') {
+          for (const file of value[key]) {
+            file.originFileObj && formData.append('jerhel_image', file.originFileObj)
+            file.url && formData.append('jerhel_image_urls', file.url)
+          }
         }
       }
     }
     setLoading(true)
     try {
+      let data = {}
       if (type === 'Edit') {
-        const data = await updateItems(formData)
+
+        data = await updateItems(formData)
       } else {
-        const data = await createItems(formData)
+        data = await createItems(formData)
       }
-      fetchData({
-        page: 1,
-        limit: 10,
-        item_id: itemID
-      })
-      setLoading(false)
-      setVisible(false);
+      if (data.code === 1) {
+        fetchData({
+          page: 1,
+          limit: 10,
+          item_id: itemID
+        })
+        setLoading(false)
+        setVisible(false);
+      } else {
+        message.error('submit fail!')
+      }
+
 
     } catch (error) {
       setLoading(false)

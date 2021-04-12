@@ -124,10 +124,10 @@ const JPLocationList = () => {
           pagination: {
             total: rowCount.count,
             current: rowCount.page,
-            onChange: (page) => {
+            onChange: (page,pageSize) => {
               fetchData({
                 page,
-                limit: 10,
+                limit: pageSize,
                 location_id: locationID
               })
             }

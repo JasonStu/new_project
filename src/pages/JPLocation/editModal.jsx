@@ -92,7 +92,7 @@ const EditModal = (props) => {
           <ProFormText
             name="contact_2_phone"
             label={null}
-            {...attrs}
+            // {...attrs}
             placeholder="Phone"
             wrapperCol={{ span: 24 }}
           />

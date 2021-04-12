@@ -106,7 +106,7 @@ const ItemsList = () => {
   const onSubmit = async (value) => {
     let formData = new FormData()
     for (const key in value) {
-      if (value[key] !== null &&value[key] !== undefined) {
+      if (value[key] !== null && value[key] !== undefined) {
         formData.append(key, value[key])
         if (key === 'open_image') {
           for (const file of value[key]) {
@@ -206,12 +206,13 @@ const ItemsList = () => {
             })
           },
           pagination: {
+
             total: rowCount.count,
             current: rowCount.page,
-            onChange: (page) => {
+            onChange: (page, pageSize) => {
               fetchData({
                 page: page,
-                limit: 10,
+                limit: pageSize,
                 item_id: itemID
               })
             }

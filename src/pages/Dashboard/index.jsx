@@ -300,10 +300,10 @@ const DashboardList = () => {
             pagination: {
               total: rowCount.count,
               current: rowCount.page,
-              onChange: (page) => {
+              onChange: (page,pageSize) => {
                 fetchData({
                   page,
-                  limit: 10,
+                  limit: pageSize,
 
                 })
                 console.log('next', page);

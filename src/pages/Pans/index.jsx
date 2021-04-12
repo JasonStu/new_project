@@ -60,10 +60,10 @@ const PansList = () => {
           pagination: {
             total: rowCount.count,
             current: rowCount.page,
-            onChange: (page) => {
+            onChange: (page,pageSize) => {
               fetchData({
                 page: page,
-                limit: 10,
+                limit: pageSize,
                 pan_id: panID,
               })
             }

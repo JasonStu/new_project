@@ -66,7 +66,7 @@ const Login: React.FC = () => {
       // console.log(msg);
 
       if (msg.code + '' === '1') {
-        message.success('登录成功!!');
+        message.success('Login Success!');
         await fetchUserInfo(msg.data);
         goto();
         return;
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
     } catch (error) {
       console.log(error);
 
-      message.error('登录失败，请重试！');
+      message.error('Logon failed. Please try again！');
     }
     setSubmitting(false);
   };

@@ -127,10 +127,10 @@ const WellsList = () => {
           pagination: {
             total: rowCount.count,
             current: rowCount.page,
-            onChange: (page) => {
+            onChange: (page,pageSize) => {
               fetchData({
                 page: page,
-                limit: 10,
+                limit: pageSize,
                 well_id: wellID
               })
               console.log('next', page);

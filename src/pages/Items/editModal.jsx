@@ -259,15 +259,15 @@ const EditModal = (props) => {
       />}
 
 
-      <ProFormSwitch
+      <ProFormCheckbox
         disabled={!Sourcing}
         name="eco_friendly"
         label="ECO Friendly"
         fieldProps={{
           defaultChecked: ecoFriendly,
-          onChange: (v) => {
-            setEcoFriendly(v)
-            // console.log('onChange===', v);
+          onChange: (e) => {
+            setEcoFriendly(e.target.checked)
+            console.log('onChange===', e.target.checked);
           }
         }}
         // {...attrs}
@@ -309,13 +309,19 @@ const EditModal = (props) => {
       <ProFormText
         name="vendor_code"
         label="Vendor Code"
+        disabled={!Engineering}
         {...attrs}
+        rules={[{ required: Engineering }]}
+
         {...tailLayout}
       />
       <ProFormText
         name="vendor_name"
         label="Vendor Name"
+        disabled={!Engineering}
         {...attrs}
+        rules={[{ required: Engineering }]} 
+
         {...tailLayout}
       />
       {  <Row>

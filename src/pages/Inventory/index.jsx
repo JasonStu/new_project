@@ -128,10 +128,10 @@ const InventoryList = () => {
           pagination: {
             total: rowCount.count,
             current: rowCount.page,
-            onChange: (page) => {
+            onChange: (page,pageSize) => {
               fetchData({
                 page: page,
-                limit: 10,
+                limit: pageSize,
                 item_id: itemID
               })
             }

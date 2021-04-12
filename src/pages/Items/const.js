@@ -1,6 +1,6 @@
-import { Row } from 'antd';
+import { Row, Image } from 'antd';
 import Open1 from '@/assets/open1.png';
-import { isArray ,findLast} from 'lodash';
+import { isArray, findLast } from 'lodash';
 import moment from 'moment';
 const USA_FORMAT = 'MM-DD-YYYY'
 
@@ -8,15 +8,18 @@ const renderImgList = (text, record, index) => {
   // console.log('text',text);
   if (isArray(text) && text.length) {
     return (
-      <Row key={index}>
+      <Image.PreviewGroup key={index}>
         {text.map((item) => (
-          <img
-            style={{ width: 46, height: 46, marginLeft: 10 }}
+
+          <Image
+            wrapperStyle={{marginLeft:'10px'}}
+            width={56}
             src={item.url || ''}
             key={item.url}
           />
+
         ))}
-      </Row>
+      </ Image.PreviewGroup>
     );
   }
   return <div />;
@@ -31,7 +34,7 @@ const renderFileList = (text, record, index) => {
 
           let arr = (item && item.url && item.url.length > 0) && item.url.split('/') || []
           // console.log('arrarrarrarrarrarr', arr);
-          return <a onClick={()=>window.open(item.url )}>{decodeURI(findLast(arr))}</a>
+          return <a onClick={() => window.open(item.url)}>{decodeURI(findLast(arr))}</a>
         })}
       </Row>
     );
